@@ -56,6 +56,7 @@ fi
 rm -f "$CWD"/{output*,comp*,res*}
 
 echo "===================$NAME========================"
+x="$NAME"
 FAIL=0
 env NATRON_PLUGIN_PATH="${plugin_path}" $TIMEOUT -s KILL 1800 "$RENDERER_BIN" ${OPTS[@]+"${OPTS[@]}"} -i ReadOIIO1 "$CWD"/input1.png -w WriteOIIO1 "$CWD"/output1.jpg 1-1 -s -l "$CWD"/script01.py "$CWD"/test.ntp > /dev/null 2>&1 || FAIL=1
 if [ $FAIL = 1 ]; then
