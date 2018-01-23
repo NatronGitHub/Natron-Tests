@@ -502,9 +502,17 @@ done
 
 for x in $CUSTOM_DIRS; do
     cd $x
+    failcustom=0
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** ===================$x========================"
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $x"
-    $TIMEOUT -s KILL 3600 bash script.sh "$RENDERER_BIN" "$FFMPEG_BIN" "$IDIFF_BIN" || true
+    $TIMEOUT -s KILL 3600 bash script.sh "$RENDERER_BIN" "$FFMPEG_BIN" "$IDIFF_BIN" || failcustom=1
+    if [ "$failcustom" != "1" ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $x"
+        echo "$x : PASS" >> $RESULTS
+    else
+        echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $x"
+        echo "$x : FAIL" >> $RESULTS
+    fi
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** END $x"
     cd ..
 done
