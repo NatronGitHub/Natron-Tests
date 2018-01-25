@@ -23,17 +23,14 @@ if ! type "$3" > /dev/null; then
 fi
 
 RENDERER_BIN="$1"
-FFMPEG_BIN="$2"
+#FFMPEG_BIN="$2"
 IDIFF_BIN="$3"
 # fail if more than 0.1% of pixels have an error larger than 0.001 or if any pixel has an error larger than 0.01
-IDIFF_OPTS="-fail 0.001 -failpercent 0.1 -hardfail 0.01 -abs -scale 100"
+IDIFF_OPTS=("-fail" "0.001" "-failpercent" "0.1" "-hardfail" "0.01" "-abs" "-scale" "100")
 CWD="$PWD"
 NAME=TestWritePNG
 uname="$(uname)"
 IMAGES_FILE_EXT=png
-FIRST_FRAME=1
-LAST_FRAME=9
-FORMATS="$CWD/formats"
 
 
 if [ "$uname" = "Darwin" ]; then
@@ -68,24 +65,23 @@ else
     # ignore failure, but check the output images
 fi
 for i in a8 a16 g8 g16 ga8 ga16 rgb8 rgb16 rgba8 rgba16; do
-    FAIL=0
     # idiff's "WARNING" gives a non-zero return status
-    "$IDIFF_BIN" "reference${i}.$IMAGES_FILE_EXT" "output${i}.$IMAGES_FILE_EXT" -o "comp${i}.$IMAGES_FILE_EXT" $IDIFF_OPTS &> res || true
+    "$IDIFF_BIN" "reference${i}.$IMAGES_FILE_EXT" "output${i}.$IMAGES_FILE_EXT" -o "comp${i}.$IMAGES_FILE_EXT" "${IDIFF_OPTS[@]}" &> res || true
     x="$NAME/$i"
     if [ ! -f "output${i}.$IMAGES_FILE_EXT" ]; then
 	echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $x"
-	echo "$x : FAIL" >> $RESULTS
+	echo "$x : FAIL" >> "$RESULTS"
     elif [ ! -z "$(grep FAILURE res || true)" ]; then
 	echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $x:"
 	cat res
-	echo "$x : FAIL" >> $RESULTS
+	echo "$x : FAIL" >> "$RESULTS"
     elif [ ! -z "$(grep WARNING res || true)" ]; then
 	echo "$(date '+%Y-%m-%d %H:%M:%S') *** WARN $x:"
 	cat res
-	echo "$x : PASS" >> $RESULTS
+	echo "$x : PASS" >> "$RESULTS"
     else
 	echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $x"
-	echo "$x : PASS" >> $RESULTS
+	echo "$x : PASS" >> "$RESULTS"
     fi
 done
 #  rm -f output* res comp*

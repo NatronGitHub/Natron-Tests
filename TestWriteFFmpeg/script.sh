@@ -26,7 +26,7 @@ RENDERER_BIN="$1"
 FFMPEG_BIN="$2"
 IDIFF_BIN="$3"
 # fail if more than 0.1% of pixels have an error larger than 0.001 or if any pixel has an error larger than 0.01
-IDIFF_OPTS="-fail 0.001 -failpercent 0.1 -hardfail 0.01 -abs -scale 100"
+IDIFF_OPTS=("-fail" "0.001" "-failpercent" "0.1" "-hardfail" "0.01" "-abs" "-scale" "100")
 CWD="$PWD"
 NAME=TestWriteFFMpeg
 uname="$(uname)"
@@ -61,7 +61,7 @@ for x in $FORMATS/*; do
   if [ ! -f "$x/format" ]; then
       continue
   fi
-  cd "$x"
+  pushd "$x"
   echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $x"
   FORMAT="$(cat format)"
   rm -f output* res comp*
@@ -97,9 +97,8 @@ for x in $FORMATS/*; do
     SEQ="jot - $FIRST_FRAME $LAST_FRAME"
   fi
   for i in $($SEQ); do
-      FAIL=0
       # idiff's "WARNING" gives a non-zero return status
-      "$IDIFF_BIN" "reference${i}.$IMAGES_FILE_EXT" "output${i}.$IMAGES_FILE_EXT" -o "comp${i}.$IMAGES_FILE_EXT" $IDIFF_OPTS &> res || true
+      "$IDIFF_BIN" "reference${i}.$IMAGES_FILE_EXT" "output${i}.$IMAGES_FILE_EXT" -o "comp${i}.$IMAGES_FILE_EXT" "${IDIFF_OPTS[@]}" &> res || true
       if [ ! -f "output${i}.$IMAGES_FILE_EXT" ]; then
           echo "WARNING: render failed for frame $i in $x:"
 	  TEST_FAIL=$((TEST_FAIL+1))
@@ -119,11 +118,11 @@ for x in $FORMATS/*; do
   done
   if [ "$TEST_FAIL" = 0 ] && [ "$TEST_PASS" = "$LAST_FRAME" ]; then
       echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $x"
-      echo "$x : PASS" >> $RESULTS
+      echo "$x : PASS" >> "$RESULTS"
   else
       echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $x"
-      echo "$x : FAIL" >> $RESULTS
+      echo "$x : FAIL" >> "$RESULTS"
   fi
   #  rm -f output* res comp*
-  cd ..
+  popd
 done

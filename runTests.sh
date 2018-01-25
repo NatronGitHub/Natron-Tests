@@ -74,9 +74,9 @@ if [ -n "${OFX_PLUGIN_PATH:-}" ]; then
 fi
 
 # fail if more than 0.1% of pixels have an error larger than 0.001 or if any pixel has an error larger than 0.01
-IDIFF_OPTS="-warn 0.001 -fail 0.001 -failpercent 0.1 -hardfail 0.01 -abs -scale 100"
+IDIFF_OPTS=("-warn" "0.001" "-fail" "0.001" "-failpercent" "0.1" "-hardfail" "0.01" "-abs" "-scale" "100")
 # tuned to pass BayMax and Spaceship:
-IDIFF_OPTS="-warn 0.001 -fail 0.008 -failpercent 0.2 -hardfail 0.08 -abs -scale 30"
+IDIFF_OPTS=("-warn" "0.001" "-fail" "0.008" "-failpercent" "0.2" "-hardfail" "0.08" "-abs" "-scale" "30")
 
 CUSTOM_DIRS="
 TestCMD
@@ -294,7 +294,7 @@ if [ $# != 1 -o \( "$1" != "clean" -a ! -x "$1" \) ]; then
     exit 1
 fi
 
-ROOTDIR=`pwd`
+ROOTDIR=$(pwd)
 
 if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
     wget -N -q http://downloads.natron.fr/Third_Party_Sources/SpaceshipSources.tar.gz && tar xf "$ROOTDIR/SpaceshipSources.tar.gz" -C "$ROOTDIR/Spaceship/"
@@ -306,21 +306,17 @@ fi
 RENDERER_BIN="$1"
 if [ "$1" = "clean" ]; then
     for t in $TEST_DIRS; do
-        cd $t
-        rm *output*.*  *comp*.*   *.autosave *.lock   tmpScript.py tmpScript.ntp  &> /dev/null || true
-        cd ..
+        (cd "$t"; rm ./*output*.*  ./*comp*.*   ./*.autosave ./*.lock   tmpScript.py tmpScript.ntp  &> /dev/null || true)
     done
     for t in $CUSTOM_DIRS; do
-        cd $t
-        rm *output*.*  *comp*.*   *.autosave *.lock &> /dev/null || true
-        cd ..
+        (cd "$t"; rm ./*output*.*  ./*comp*.*   ./*.autosave ./*.lock &> /dev/null || true)
     done
     exit 0
 fi
 
 export FAILED_DIR="$ROOTDIR"/failed
 export RESULTS="$ROOTDIR"/result.txt
-echo > $RESULTS
+echo > "$RESULTS"
 
 if [ -d "$FAILED_DIR" ]; then
     rm -rf "$FAILED_DIR"
@@ -336,7 +332,7 @@ IMAGES_FILE_EXT="jpg"
 uname="$(uname)"
 
 for t in $TEST_DIRS; do
-    cd $t
+    pushd "$t"
 
     failseq=0
     rm res &> /dev/null || true
@@ -358,13 +354,13 @@ for t in $TEST_DIRS; do
     
     CWD="$PWD"
     CONF="$(cat $CONFFILE)"
-    NATRONPROJ=$(echo $CONF | awk '{print $1;}')
-    NATRONPROJ=$CWD/$NATRONPROJ
-    FIRST_FRAME=$(echo $CONF | awk '{print $2;}')
-    LAST_FRAME=$(echo $CONF | awk '{print $3;}')
-    OUTPUTNODE=$(echo $CONF | awk '{print $4;}')
-    IMAGES_FILE_EXT=$(echo $CONF | awk '{print $5;}')
-    QUALITY=$(echo $CONF | awk '{print $6;}')
+    NATRONPROJ=$(echo "$CONF" | awk '{print $1;}')
+    NATRONPROJ="$CWD/$NATRONPROJ"
+    FIRST_FRAME=$(echo "$CONF" | awk '{print $2;}')
+    LAST_FRAME=$(echo "$CONF" | awk '{print $3;}')
+    OUTPUTNODE=$(echo "$CONF" | awk '{print $4;}')
+    IMAGES_FILE_EXT=$(echo "$CONF" | awk '{print $5;}')
+    QUALITY=$(echo "$CONF" | awk '{print $6;}')
     if [[ -z $QUALITY ]]; then
         QUALITY=$DEFAULT_QUALITY
     fi
@@ -419,7 +415,7 @@ for t in $TEST_DIRS; do
     else
         echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $t"
         renderfail=0
-        env NATRON_PLUGIN_PATH="${plugin_path}" $TIMEOUT -s KILL 3600 "$RENDERER_BIN" ${OPTS[@]+"${OPTS[@]}"} -w $WRITER_NODE_NAME -l $CWD/$TMP_SCRIPT $NATRONPROJ || renderfail=1
+        env NATRON_PLUGIN_PATH="${plugin_path}" $TIMEOUT -s KILL 3600 "$RENDERER_BIN" ${OPTS[@]+"${OPTS[@]}"} -w "$WRITER_NODE_NAME" -l "$CWD/$TMP_SCRIPT" "$NATRONPROJ" || renderfail=1
         if [ "$renderfail" != "1" ]; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') *** END render $t/$CONFFILE"
         else
@@ -448,7 +444,7 @@ for t in $TEST_DIRS; do
                 failframe=1
             else
                 # idiff's "WARNING" gives a non-zero return status
-                "$IDIFF_BIN" "reference${i}.$IMAGES_FILE_EXT" "output${i}.$IMAGES_FILE_EXT" -o "comp${i}.$IMAGES_FILE_EXT" $IDIFF_OPTS &> res || true
+                "$IDIFF_BIN" "reference${i}.$IMAGES_FILE_EXT" "output${i}.$IMAGES_FILE_EXT" -o "comp${i}.$IMAGES_FILE_EXT" "${IDIFF_OPTS[@]}" &> res || true
 
                 if [ ! -f "output${i}.$IMAGES_FILE_EXT" ]; then
                     echo "WARNING: render failed for frame $i in $t"
@@ -491,30 +487,30 @@ for t in $TEST_DIRS; do
     
     if [ "$failseq" != "1" ]; then
         echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $t"
-        echo "$t : PASS" >> $RESULTS
+        echo "$t : PASS" >> "$RESULTS"
     else
         echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $t"
-        echo "$t : FAIL" >> $RESULTS
+        echo "$t : FAIL" >> "$RESULTS"
     fi
     failseq="0"
-    cd ..
+    popd # "$t"
 done
 
 for x in $CUSTOM_DIRS; do
-    cd $x
+    pushd "$x"
     failcustom=0
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** ===================$x========================"
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $x"
     $TIMEOUT -s KILL 3600 bash script.sh "$RENDERER_BIN" "$FFMPEG_BIN" "$IDIFF_BIN" || failcustom=1
     if [ "$failcustom" != "1" ]; then
         echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $x"
-        echo "$x : PASS" >> $RESULTS
+        echo "$x : PASS" >> "$RESULTS"
     else
         echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $x"
-        echo "$x : FAIL" >> $RESULTS
+        echo "$x : FAIL" >> "$RESULTS"
     fi
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** END $x"
-    cd ..
+    popd # "$x"
 done
 
 # Local Variables:
