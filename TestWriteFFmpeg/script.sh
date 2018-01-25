@@ -108,7 +108,7 @@ for x in $FORMATS/*; do
 	  cat res
 	  TEST_FAIL=$((TEST_FAIL+1))
       elif [ ! -z "$(grep WARNING res || true)" ]; then
-          echo "WARNING: unit test warning for frame $i in $t:"
+          echo "WARNING: unit test warning for frame $i in $x:"
           cat res
 	  TEST_PASS=$((TEST_PASS+1))
       else
