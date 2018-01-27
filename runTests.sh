@@ -353,14 +353,14 @@ for t in $TEST_DIRS; do
     fi
     
     CWD="$PWD"
-    CONF="$(cat $CONFFILE)"
-    NATRONPROJ=$(echo "$CONF" | awk '{print $1;}')
+    for i in 1; do
+        read NATRONPROJ
+        read FIRST_FRAME LAST_FRAME
+        read OUTPUTNODE
+        read IMAGES_FILE_EXT
+        read QUALITY
+    done < "$CONFFILE"
     NATRONPROJ="$CWD/$NATRONPROJ"
-    FIRST_FRAME=$(echo "$CONF" | awk '{print $2;}')
-    LAST_FRAME=$(echo "$CONF" | awk '{print $3;}')
-    OUTPUTNODE=$(echo "$CONF" | awk '{print $4;}')
-    IMAGES_FILE_EXT=$(echo "$CONF" | awk '{print $5;}')
-    QUALITY=$(echo "$CONF" | awk '{print $6;}')
     if [[ -z $QUALITY ]]; then
         QUALITY=$DEFAULT_QUALITY
     fi
