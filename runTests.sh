@@ -353,12 +353,13 @@ for t in $TEST_DIRS; do
     fi
     
     CWD="$PWD"
+    QUALITY=""
     for i in 1; do
         read NATRONPROJ
         read FIRST_FRAME LAST_FRAME
         read OUTPUTNODE
         read IMAGES_FILE_EXT
-        read QUALITY
+        read QUALITY || [ -n "$QUALITY" ] # sometimes the last line contains no new line but can still be read, see https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
     done < "$CONFFILE"
     NATRONPROJ="$CWD/$NATRONPROJ"
     if [[ -z $QUALITY ]]; then
@@ -512,6 +513,9 @@ for x in $CUSTOM_DIRS; do
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** END $x"
     popd # "$x"
 done
+
+echo "$(date '+%Y-%m-%d %H:%M:%S') *** RESULTS:"
+cat "$RESULTS"
 
 # Local Variables:
 # indent-tabs-mode: nil
