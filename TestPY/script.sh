@@ -62,7 +62,7 @@ for i in "$CWD"/test___*.py; do
 	if [ ! -f "$CWD/test___$SCRIPT-output.txt" ]; then
 	    DIFF1="Failed (no output)"
 	else
-	    DIFF1="$(diff -w $CWD/test___$SCRIPT-reference.txt $CWD/test___$SCRIPT-output.txt)"
+	    DIFF1="$(diff -w $CWD/test___$SCRIPT-reference.txt $CWD/test___$SCRIPT-output.txt || true)"
 	fi
 	if [ "$FAIL" != 0 ]; then
 	    DIFF1="$DIFF1 $(cat res)"
