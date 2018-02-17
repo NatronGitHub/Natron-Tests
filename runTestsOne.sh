@@ -62,10 +62,15 @@ IDIFF_OPTS="-warn 0.001 -fail 0.001 -failpercent 0.1 -hardfail 0.01 -abs -scale 
 IDIFF_OPTS="-warn 0.001 -fail 0.008 -failpercent 0.2 -hardfail 0.08 -abs -scale 30"
 
 CUSTOM_DIRS="
+TestCMD
+TestPY
 TestWriteFFmpeg
 "
 
 TEST_DIRS="
+TestImagePNG
+TestImagePNGOIIO
+TestText
 "
 
 if [ $# != 1 -o \( "$1" != "clean" -a ! -x "$1" \) ]; then
@@ -119,10 +124,6 @@ for t in $TEST_DIRS; do
     cd $t
 
     failseq=0
-    rm res &> /dev/null || true
-    rm output[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
-    rm comp[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
-
 
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** ===================$t========================"
     ############################################
@@ -148,6 +149,11 @@ for t in $TEST_DIRS; do
     if [[ -z $QUALITY ]]; then
         QUALITY=$DEFAULT_QUALITY
     fi
+
+    rm res &> /dev/null || true
+    rm output[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
+    rm comp[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
+
     touch $TMP_SCRIPT
     echo "import sys" > $TMP_SCRIPT
     echo "import NatronEngine" > $TMP_SCRIPT

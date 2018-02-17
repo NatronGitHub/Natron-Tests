@@ -335,9 +335,6 @@ for t in $TEST_DIRS; do
     pushd "$t"
 
     failseq=0
-    rm res &> /dev/null || true
-    rm output[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
-    rm comp[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
 
 
     echo "$(date '+%Y-%m-%d %H:%M:%S') *** ===================$t========================"
@@ -365,6 +362,11 @@ for t in $TEST_DIRS; do
     if [[ -z $QUALITY ]]; then
         QUALITY=$DEFAULT_QUALITY
     fi
+
+    rm res &> /dev/null || true
+    rm output[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
+    rm comp[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
+
     touch $TMP_SCRIPT
     echo "import sys" > $TMP_SCRIPT
     echo "import NatronEngine" > $TMP_SCRIPT
