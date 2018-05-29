@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <!DOCTYPE boost_serialization>
-<boost_serialization signature="serialization::archive" version="10">
+<boost_serialization signature="serialization::archive" version="13">
 <Background_project>0</Background_project>
 <Project class_id="0" tracking_level="0" version="5">
-	<NatronVersion>Natron v2.0.0 from git branch workshop commit 6a16df679e251c549196d94037880554fa2e665e  for   Linux 64bit</NatronVersion>
+	<NatronVersion>Natron v2.0.5 from git branch tags/2.0.5 commit bcf2466fbb04615ad8ebdea8baafc0c78f573b8b  for   MacOSX 64bit</NatronVersion>
 	<NodesCollection class_id="1" tracking_level="0" version="1">
 		<NodesCount>3</NodesCount>
 		<item class_id="2" tracking_level="0" version="14">
@@ -65,7 +65,7 @@
 				<Name>NatronParamFormatChoice</Name>
 				<Type>Choice</Type>
 				<Dimension>1</Dimension>
-				<Secret>0</Secret>
+				<Secret>1</Secret>
 				<MasterIsAlias>0</MasterIsAlias>
 				<item>
 					<Enabled>1</Enabled>
@@ -75,7 +75,7 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<ChoiceLabel>HD  1920 x 1080  1</ChoiceLabel>
+				<ChoiceLabel>HD 1920x1080</ChoiceLabel>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -245,7 +245,7 @@
 				<item>
 					<Enabled>1</Enabled>
 					<HasAnimation>0</HasAnimation>
-					<Value>45</Value>
+					<Value>4.50000000000000000e+01</Value>
 					<HasMaster>0</HasMaster>
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
@@ -253,7 +253,7 @@
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
-				<Name>outputLayersChoice</Name>
+				<Name>outputChannelsChoice</Name>
 				<Type>String</Type>
 				<Dimension>1</Dimension>
 				<Secret>1</Secret>
@@ -261,7 +261,7 @@
 				<item>
 					<Enabled>1</Enabled>
 					<HasAnimation>0</HasAnimation>
-					<Value>RGBA</Value>
+					<Value>Color.RGBA</Value>
 					<HasMaster>0</HasMaster>
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
@@ -453,7 +453,7 @@
 				<item>
 					<Enabled>0</Enabled>
 					<HasAnimation>0</HasAnimation>
-					<Value>1</Value>
+					<Value>1.00000000000000000e+00</Value>
 					<HasMaster>0</HasMaster>
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
@@ -461,7 +461,7 @@
 				<item>
 					<Enabled>0</Enabled>
 					<HasAnimation>0</HasAnimation>
-					<Value>1</Value>
+					<Value>1.00000000000000000e+00</Value>
 					<HasMaster>0</HasMaster>
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
@@ -485,23 +485,6 @@
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
-				<Name>filePremult</Name>
-				<Type>Choice</Type>
-				<Dimension>1</Dimension>
-				<Secret>0</Secret>
-				<MasterIsAlias>0</MasterIsAlias>
-				<item>
-					<Enabled>1</Enabled>
-					<HasAnimation>0</HasAnimation>
-					<Value>0</Value>
-					<HasMaster>0</HasMaster>
-					<Expression></Expression>
-					<ExprHasRet>0</ExprHasRet>
-				</item>
-				<ChoiceLabel>Opaque</ChoiceLabel>
-				<UserKnob>0</UserKnob>
-			</item>
-			<item>
 				<Name>NatronOfxParamStringSublabelName</Name>
 				<Type>String</Type>
 				<Dimension>1</Dimension>
@@ -519,6 +502,22 @@
 					<count>0</count>
 					<item_version>0</item_version>
 				</StringsAnimation>
+				<UserKnob>0</UserKnob>
+			</item>
+			<item>
+				<Name>ParamExistingInstance</Name>
+				<Type>Bool</Type>
+				<Dimension>1</Dimension>
+				<Secret>1</Secret>
+				<MasterIsAlias>0</MasterIsAlias>
+				<item>
+					<Enabled>1</Enabled>
+					<HasAnimation>0</HasAnimation>
+					<Value>1</Value>
+					<HasMaster>0</HasMaster>
+					<Expression></Expression>
+					<ExprHasRet>0</ExprHasRet>
+				</item>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -585,7 +584,7 @@
 				<count>0</count>
 				<item_version>0</item_version>
 			</Inputs_map>
-			<KnobsAge>6</KnobsAge>
+			<KnobsAge>7</KnobsAge>
 			<MasterNode></MasterNode>
 			<HasRotoContext>0</HasRotoContext>
 			<MultiInstanceParent></MultiInstanceParent>
@@ -602,7 +601,7 @@
 			<CacheID>ReadSVG1</CacheID>
 		</item>
 	</NodesCollection>
-	<ProjectKnobsCount>3</ProjectKnobsCount>
+	<ProjectKnobsCount>4</ProjectKnobsCount>
 	<item>
 		<Name>projectPaths</Name>
 		<Type>Path</Type>
@@ -612,7 +611,7 @@
 		<item>
 			<Enabled>1</Enabled>
 			<HasAnimation>0</HasAnimation>
-			<Value>&lt;Name&gt;OCIO&lt;/Name&gt;&lt;Value&gt;/home/olear/Natron2/Resources/OpenColorIO-Configs/blender&lt;/Value&gt;&lt;Name&gt;Project&lt;/Name&gt;&lt;Value&gt;/home/olear/Natron-Tests/TestImageSVG&lt;/Value&gt;</Value>
+			<Value>&lt;Name&gt;OCIO&lt;/Name&gt;&lt;Value&gt;/Applications/Natron 2.0.5.app/Contents/Resources/OpenColorIO-Configs/blender&lt;/Value&gt;&lt;Name&gt;Project&lt;/Name&gt;&lt;Value&gt;/Users/devernay/Development/Natron-Tests/TestImageSVG&lt;/Value&gt;</Value>
 			<HasMaster>0</HasMaster>
 			<Expression></Expression>
 			<ExprHasRet>0</ExprHasRet>
@@ -633,7 +632,31 @@
 			<Expression></Expression>
 			<ExprHasRet>0</ExprHasRet>
 		</item>
-		<ChoiceLabel>square_512  512 x 512  1</ChoiceLabel>
+		<ChoiceLabel>square_512 512x512</ChoiceLabel>
+		<UserKnob>0</UserKnob>
+	</item>
+	<item>
+		<Name>frameRange</Name>
+		<Type>Int</Type>
+		<Dimension>2</Dimension>
+		<Secret>0</Secret>
+		<MasterIsAlias>0</MasterIsAlias>
+		<item>
+			<Enabled>1</Enabled>
+			<HasAnimation>0</HasAnimation>
+			<Value>1</Value>
+			<HasMaster>0</HasMaster>
+			<Expression></Expression>
+			<ExprHasRet>0</ExprHasRet>
+		</item>
+		<item>
+			<Enabled>1</Enabled>
+			<HasAnimation>0</HasAnimation>
+			<Value>1</Value>
+			<HasMaster>0</HasMaster>
+			<Expression></Expression>
+			<ExprHasRet>0</ExprHasRet>
+		</item>
 		<UserKnob>0</UserKnob>
 	</item>
 	<item>
@@ -645,7 +668,7 @@
 		<item>
 			<Enabled>0</Enabled>
 			<HasAnimation>0</HasAnimation>
-			<Value>Thu Jan 28 10:41:00 2016</Value>
+			<Value>mar. mai 29 11:07:04 2018</Value>
 			<HasMaster>0</HasMaster>
 			<Expression></Expression>
 			<ExprHasRet>0</ExprHasRet>
@@ -669,43 +692,43 @@
 		<item_version>6</item_version>
 		<item class_id="12" tracking_level="0" version="6">
 			<Name>Viewer1</Name>
-			<X_position>633.125</X_position>
-			<Y_position>333.125</Y_position>
+			<X_position>6.33125000000000000e+02</X_position>
+			<Y_position>3.33125000000000000e+02</Y_position>
 			<Preview_enabled>0</Preview_enabled>
-			<r>0.69999236</r>
-			<g>0.69999236</g>
-			<b>0.69999236</b>
+			<r>6.99992359e-01</r>
+			<g>6.99992359e-01</g>
+			<b>6.99992359e-01</b>
 			<Selected>0</Selected>
-			<Width>104</Width>
-			<Height>32</Height>
+			<Width>1.04000000000000000e+02</Width>
+			<Height>3.00000000000000000e+01</Height>
 			<HasOverlayColor>0</HasOverlayColor>
 			<Children>0</Children>
 		</item>
 		<item>
 			<Name>WriteOIIO1</Name>
-			<X_position>773.125</X_position>
-			<Y_position>308.75</Y_position>
+			<X_position>7.73125000000000000e+02</X_position>
+			<Y_position>3.08750000000000000e+02</Y_position>
 			<Preview_enabled>0</Preview_enabled>
-			<r>0.74999619</r>
-			<g>0.74999619</g>
-			<b>0</b>
+			<r>7.49996185e-01</r>
+			<g>7.49996185e-01</g>
+			<b>0.00000000e+00</b>
 			<Selected>0</Selected>
-			<Width>104</Width>
-			<Height>66</Height>
+			<Width>1.04000000000000000e+02</Width>
+			<Height>5.10000000000000000e+01</Height>
 			<HasOverlayColor>0</HasOverlayColor>
 			<Children>0</Children>
 		</item>
 		<item>
 			<Name>ReadSVG1</Name>
-			<X_position>513.5</X_position>
-			<Y_position>134</Y_position>
+			<X_position>5.13500000000000000e+02</X_position>
+			<Y_position>1.34000000000000000e+02</Y_position>
 			<Preview_enabled>1</Preview_enabled>
-			<r>0.69999236</r>
-			<g>0.69999236</g>
-			<b>0.69999236</b>
+			<r>6.99992359e-01</r>
+			<g>6.99992359e-01</g>
+			<b>6.99992359e-01</b>
 			<Selected>0</Selected>
-			<Width>128</Width>
-			<Height>78</Height>
+			<Width>1.28000000000000000e+02</Width>
+			<Height>7.80000000000000000e+01</Height>
 			<HasOverlayColor>0</HasOverlayColor>
 			<Children>0</Children>
 		</item>
@@ -715,11 +738,11 @@
 		<Window class_id="14" tracking_level="0" version="1">
 			<ChildType>0</ChildType>
 			<Child class_id="15" tracking_level="1" version="1" object_id="_0">
-				<Sizes>1017 547</Sizes>
+				<Sizes>1044 562</Sizes>
 				<Orientation>1</Orientation>
 				<ChildIsSplitter>1</ChildIsSplitter>
 				<Child object_id="_1">
-					<Sizes>557 557</Sizes>
+					<Sizes>461 460</Sizes>
 					<Orientation>2</Orientation>
 					<ChildIsSplitter>0</ChildIsSplitter>
 					<Child class_id="16" tracking_level="1" version="5" object_id="_2">
@@ -735,11 +758,12 @@
 					<ChildIsSplitter>0</ChildIsSplitter>
 					<Child object_id="_3">
 						<Tabs>
-							<count>3</count>
+							<count>4</count>
 							<item_version>0</item_version>
 							<item>nodeGraph</item>
 							<item>curveEditor</item>
 							<item>dopeSheetEditor</item>
+							<item>progress</item>
 						</Tabs>
 						<Index>0</Index>
 						<Name>pane3</Name>
@@ -759,10 +783,10 @@
 				</Child>
 			</Child>
 			<MainWindow>1</MainWindow>
-			<x>1280</x>
-			<y>50</y>
-			<w>1600</w>
-			<h>1145</h>
+			<x>278</x>
+			<y>108</y>
+			<w>1642</w>
+			<h>924</h>
 		</Window>
 	</Gui_Layout>
 	<ViewersData class_id="18" tracking_level="0" version="0">
@@ -770,40 +794,44 @@
 		<item_version>0</item_version>
 		<item class_id="19" tracking_level="0" version="0">
 			<first>Viewer1</first>
-			<second class_id="20" tracking_level="0" version="11">
-				<zoomLeft>-429.48374683544307</zoomLeft>
-				<zoomBottom>-10.24</zoomBottom>
-				<zoomFactor>0.74181189903846156</zoomFactor>
+			<second class_id="20" tracking_level="0" version="13">
+				<zoomLeft>2.32198217612794878e+02</zoomLeft>
+				<zoomBottom>6.50642880208679486e+01</zoomBottom>
+				<zoomFactor>4.41260666187875827e+00</zoomFactor>
 				<UserRoIEnabled>0</UserRoIEnabled>
 				<UserRoI class_id="21" tracking_level="0" version="0">
-					<Left>170.66666666666666</Left>
-					<Bottom>170.66666666666666</Bottom>
-					<Right>341.33333333333337</Right>
-					<Top>341.33333333333337</Top>
+					<Left>1.70666666666666657e+02</Left>
+					<Bottom>1.70666666666666657e+02</Bottom>
+					<Right>3.41333333333333371e+02</Right>
+					<Top>3.41333333333333371e+02</Top>
 				</UserRoI>
 				<ClippedToProject>0</ClippedToProject>
 				<AutoContrast>0</AutoContrast>
-				<Gain>1</Gain>
-				<Gain>1</Gain>
+				<Gain>1.00000000000000000e+00</Gain>
+				<Gain>1.00000000000000000e+00</Gain>
 				<ColorSpace>sRGB</ColorSpace>
+				<Layer>Color.RGBA</Layer>
+				<AlphaLayer>Color.A</AlphaLayer>
 				<Channels>RGB</Channels>
 				<RenderScaleActivated>0</RenderScaleActivated>
 				<MipMapLevel>0</MipMapLevel>
-				<ZoomOrPanSinceFit>0</ZoomOrPanSinceFit>
+				<ZoomOrPanSinceFit>1</ZoomOrPanSinceFit>
 				<CompositingOP>0</CompositingOP>
 				<LeftBound>1</LeftBound>
-				<RightBound>250</RightBound>
+				<RightBound>1</RightBound>
 				<LeftToolbarVisible>1</LeftToolbarVisible>
 				<RightToolbarVisible>1</RightToolbarVisible>
 				<TopToolbarVisible>1</TopToolbarVisible>
 				<PlayerVisible>1</PlayerVisible>
 				<TimelineVisible>1</TimelineVisible>
 				<InfobarVisible>1</InfobarVisible>
+				<isInputAPaused>0</isInputAPaused>
+				<isInputBPaused>0</isInputBPaused>
 				<CheckerboardEnabled>0</CheckerboardEnabled>
-				<Fps>24</Fps>
+				<Fps>2.40000000000000000e+01</Fps>
 				<FpsLocked>1</FpsLocked>
 				<aInput>0</aInput>
-				<bInput>-1</bInput>
+				<bInput>0</bInput>
 			</second>
 		</item>
 	</ViewersData>
@@ -814,9 +842,9 @@
 	<OpenedPanels>
 		<count>3</count>
 		<item_version>0</item_version>
-		<item>ReadSVG1</item>
 		<item>WriteOIIO1</item>
 		<item>Natron_Project_Settings_Panel</item>
+		<item>ReadSVG1</item>
 	</OpenedPanels>
 	<ScriptEditorInput></ScriptEditorInput>
 	<NumPyPanels>0</NumPyPanels>
