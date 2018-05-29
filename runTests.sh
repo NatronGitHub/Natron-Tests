@@ -148,6 +148,7 @@ TestImagePSD
 TestImageRGB
 TestImageRGBA
 TestImageSVG
+TestImageSVGPremult
 TestImageTGA
 TestImageTIF
 TestImageXCF
