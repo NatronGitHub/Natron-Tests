@@ -286,6 +286,7 @@ TestVectorToColor
 TestWave
 TestZMask
 BayMax
+GNUVolador
 Spaceship
 "
 
