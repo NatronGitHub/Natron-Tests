@@ -19,7 +19,7 @@
 
 set -e # Exit immediately if a command exits with a non-zero status.
 set -u # Treat unset variables as an error when substituting.
-#set -x # Print commands and their arguments as they are executed.
+set -x # Print commands and their arguments as they are executed.
 
 echo "*** Natron tests"
 echo "Environment:"
@@ -418,7 +418,7 @@ for t in $TEST_DIRS; do
         echo "TestTile crashes on Linux64, and this script quits before printing *** END TestTile, I do not understand why"
         failconf=1
     else
-        echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $t"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') *** START render $t/$CONFFILE"
         renderfail=0
         env NATRON_PLUGIN_PATH="${plugin_path}" $TIMEOUT -s KILL 3600 "$RENDERER_BIN" ${OPTS[@]+"${OPTS[@]}"} -w "$WRITER_NODE_NAME" -l "$CWD/$TMP_SCRIPT" "$NATRONPROJ" || renderfail=1
         if [ "$renderfail" != "1" ]; then
