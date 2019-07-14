@@ -297,12 +297,19 @@ if [ $# != 1 -o \( "$1" != "clean" -a ! -x "$1" \) ]; then
 fi
 
 ROOTDIR=$(pwd)
+# tell curl to continue downloads and follow redirects
+curlopts="--location --continue-at -"
+CURL="curl $curlopts"
+EXAMPLES_URL=https://sourceforge.net/projects/natron/files/Examples
+
+# user can specify where to find SpaceShip and BayMax sources using the SRCDIR env var
+srcdir="${SRCDIR:-$ROOTDIR}"
 
 if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
-    wget -N -q http://downloads.natron.fr/Third_Party_Sources/SpaceshipSources.tar.gz && tar xf "$ROOTDIR/SpaceshipSources.tar.gz" -C "$ROOTDIR/Spaceship/"
+    (cd $srcdir; $CURL --remote-name $EXAMPLES_URL/Natron_2.3.12_Spaceship.zip) && (cd "$ROOTDIR/Spaceship/" && unzip "$srcdir/Natron_2.3.12_Spaceship.zip" && mv Natron_2.3.12_Spaceship/Natron_project/Sources .)
 fi
 if [ ! -d "$ROOTDIR/BayMax/Robot" ]; then
-    wget -N -q http://downloads.natron.fr/Third_Party_Sources/Robot.tar.gz && tar xf "$ROOTDIR/Robot.tar.gz" -C "$ROOTDIR/BayMax/"
+    (cd $srcdir; $CURL --remote-name $EXAMPLES_URL/Natron_2.3.12_BayMax.zip && (cd "$ROOTDIR/BayMax/" && unzip "$srcdir/Natron_2.3.12_BayMax.zip" && mv Natron_2.3.12_BayMax/Robot .)
 fi
 
 RENDERER_BIN="$1"
