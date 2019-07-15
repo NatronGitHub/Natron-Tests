@@ -22,8 +22,6 @@ set -u # Treat unset variables as an error when substituting.
 set -x # Print commands and their arguments as they are executed.
 
 echo "*** Natron tests"
-echo "Environment:"
-env
 
 case "$(uname -s)" in
 Linux)
@@ -41,6 +39,10 @@ Darwin)
     exit 1
     ;;
 esac
+
+echo "Operating System: $PKGOS"
+echo "Environment:"
+env
 
 # update the font cache if necessary (avoid blocking trhe first test)
 fc-cache -v || true
@@ -89,7 +91,7 @@ TEST_DIRS="
 TestText
 "
 
-if [ $# != 1 -o \( "$1" != "clean" -a ! -x "$1" \) ]; then
+if [ $# != 1 ] || [ \( "$1" != "clean" -a ! -x "$1" \) ]; then
     echo "Usage: $0 <absolute path to NatronRenderer binary>"
     echo "Or $0 clean to remove any output images generated."
     exit 1
@@ -105,10 +107,10 @@ EXAMPLES_URL=https://sourceforge.net/projects/natron/files/Examples
 srcdir="${SRCDIR:-$ROOTDIR}"
 
 if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
-    (cd $srcdir; $CURL --remote-name $EXAMPLES_URL/Natron_2.3.12_Spaceship.zip) && (cd "$ROOTDIR/Spaceship/" && unzip "$srcdir/Natron_2.3.12_Spaceship.zip" && mv Natron_2.3.12_Spaceship/Natron_project/Sources .)
+    (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/Natron_2.3.12_Spaceship.zip") && (cd "$ROOTDIR/Spaceship/" && unzip "$srcdir/Natron_2.3.12_Spaceship.zip" && mv Natron_2.3.12_Spaceship/Natron_project/Sources .)
 fi
 if [ ! -d "$ROOTDIR/BayMax/Robot" ]; then
-    (cd $srcdir; $CURL --remote-name $EXAMPLES_URL/Natron_2.3.12_BayMax.zip && (cd "$ROOTDIR/BayMax/" && unzip "$srcdir/Natron_2.3.12_BayMax.zip" && mv Natron_2.3.12_BayMax/Robot .)
+    (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/Natron_2.3.12_BayMax.zip") && (cd "$ROOTDIR/BayMax/" && unzip "$srcdir/Natron_2.3.12_BayMax.zip" && mv Natron_2.3.12_BayMax/Robot .)
 fi
 
 RENDERER_BIN="$1"
@@ -160,11 +162,11 @@ for t in $TEST_DIRS; do
     CWD="$PWD"
     QUALITY=""
     for i in 1; do
-        read NATRONPROJ
-        read FIRST_FRAME LAST_FRAME
-        read OUTPUTNODE
-        read IMAGES_FILE_EXT
-        read QUALITY || [ -n "$QUALITY" ] # sometimes the last line contains no new line but can still be read, see https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
+        read -r NATRONPROJ
+        read -r FIRST_FRAME LAST_FRAME
+        read -r OUTPUTNODE
+        read -r IMAGES_FILE_EXT
+        read -r QUALITY || [ -n "$QUALITY" ] # sometimes the last line contains no new line but can still be read, see https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
     done < "$CONFFILE"
     NATRONPROJ="$CWD/$NATRONPROJ"
     if [[ -z $QUALITY ]]; then
@@ -172,45 +174,46 @@ for t in $TEST_DIRS; do
     fi
 
     rm res &> /dev/null || true
-    rm output[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
-    rm comp[0-9]*.$IMAGES_FILE_EXT &> /dev/null || true
+    rm output[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
+    rm comp[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
 
     touch $TMP_SCRIPT
-    echo "import sys" > $TMP_SCRIPT
-    echo "import NatronEngine" > $TMP_SCRIPT
+    {
+    echo "import sys"
+    echo "import NatronEngine"
 
     #Create the write node
-    echo "writer = app.createNode(\"$WRITER_PLUGINID\")" >> $TMP_SCRIPT
-    echo "if not writer:" >> $TMP_SCRIPT
-    echo "    raise ValueError(\"Could not create a writer with the following plug-in ID: $WRITER_PLUGINID\")" >> $TMP_SCRIPT
-    echo "    sys.exit(1)" >> $TMP_SCRIPT
-    echo "if not writer.setScriptName(\"$WRITER_NODE_NAME\"):" >> $TMP_SCRIPT
-    echo "    raise NameError(\"Could not set writer script-name to $WRITER_NODE_NAME, aborting\")" >> $TMP_SCRIPT
-    echo "    sys.exit(1)" >> $TMP_SCRIPT
-    echo "#We must do this to copy the parameters attributes of the node to \"writer\"" >> $TMP_SCRIPT
-    echo "writer = app.$WRITER_NODE_NAME" >> $TMP_SCRIPT
-    echo "inputNode = app.$OUTPUTNODE" >> $TMP_SCRIPT
-    echo "writer.connectInput(0, inputNode)" >> $TMP_SCRIPT
+    echo "writer = app.createNode(\"$WRITER_PLUGINID\")"
+    echo "if not writer:"
+    echo "    raise ValueError(\"Could not create a writer with the following plug-in ID: $WRITER_PLUGINID\")"
+    echo "    sys.exit(1)"
+    echo "if not writer.setScriptName(\"$WRITER_NODE_NAME\"):"
+    echo "    raise NameError(\"Could not set writer script-name to $WRITER_NODE_NAME, aborting\")"
+    echo "    sys.exit(1)"
+    echo "#We must do this to copy the parameters attributes of the node to \"writer\""
+    echo "writer = app.$WRITER_NODE_NAME"
+    echo "inputNode = app.$OUTPUTNODE"
+    echo "writer.connectInput(0, inputNode)"
     
     #Set the output filename
-    echo "writer.filename.set(\"[Project]/output#.$IMAGES_FILE_EXT\")" >> $TMP_SCRIPT
+    echo "writer.filename.set(\"[Project]/output#.$IMAGES_FILE_EXT\")"
     #Set the output plugin
-    echo "writer.encodingPluginChoice.set(\"$WRITER_PLUGINID\")" >> $TMP_SCRIPT
+    echo "writer.encodingPluginChoice.set(\"$WRITER_PLUGINID\")"
 
     #Set manual frame range
-    echo "writer.frameRange.set(2)" >> $TMP_SCRIPT
-    echo "writer.firstFrame.set($FIRST_FRAME)" >> $TMP_SCRIPT
-    echo "writer.lastFrame.set($LAST_FRAME)" >> $TMP_SCRIPT
+    echo "writer.frameRange.set(2)"
+    echo "writer.firstFrame.set($FIRST_FRAME)"
+    echo "writer.lastFrame.set($LAST_FRAME)"
     
     #Set compression to none
     if [ "$IMAGES_FILE_EXT" = "jpg" ]; then
-        echo "writer.quality.set($QUALITY)" >> $TMP_SCRIPT
+        echo "writer.quality.set($QUALITY)"
     fi
-    echo "print('encoder=',writer.internalEncoderNode.getPluginID())" >> $TMP_SCRIPT
-    echo "print('ocioInputSpace=',writer.ocioInputSpaceIndex.getOption(writer.ocioInputSpaceIndex.getValue()))" >> $TMP_SCRIPT
-    echo "print('ocioOutputSpace=',writer.ocioOutputSpaceIndex.getOption(writer.ocioOutputSpaceIndex.getValue()))" >> $TMP_SCRIPT
-    #echo "app.saveTempProject('tmpScript.ntp')" >> $TMP_SCRIPT
-
+    echo "print('encoder=',writer.internalEncoderNode.getPluginID())"
+    echo "print('ocioInputSpace=',writer.ocioInputSpaceIndex.getOption(writer.ocioInputSpaceIndex.getValue()))"
+    echo "print('ocioOutputSpace=',writer.ocioOutputSpaceIndex.getOption(writer.ocioOutputSpaceIndex.getValue()))"
+    #echo "app.saveTempProject('tmpScript.ntp')"
+    } >> $TMP_SCRIPT
     cat $TMP_SCRIPT     
 
     #Start rendering, silent stdout
@@ -263,11 +266,11 @@ for t in $TEST_DIRS; do
                 elif [ ! -f "comp${i}.$IMAGES_FILE_EXT" ]; then
                     echo "WARNING: $IDIFF_BIN failed for frame $i in $t"
                     failframe=1
-                elif [ ! -z "$(grep FAILURE res || true)" ]; then
+                elif [ -n "$(grep FAILURE res || true)" ]; then
                     echo "WARNING: unit test failed for frame $i in $t:"
                     cat res
                     failframe=1
-                elif [ ! -z "$(grep WARNING res || true)" ]; then
+                elif [ -n "$(grep WARNING res || true)" ]; then
                     echo "WARNING: unit test warning for frame $i in $t:"
                     cat res
                 fi
