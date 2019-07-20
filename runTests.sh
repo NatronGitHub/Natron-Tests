@@ -312,7 +312,7 @@ baymaxdir="Natron_2.3.12_BayMax"
 srcdir="${SRCDIR:-$ROOTDIR}"
 
 if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
-    if [ ! -f "$srcdir/$spaceshipdir" ]; then
+    if [ ! -f "$srcdir/$spaceshipzip" ]; then
         (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/$spaceshipzip")
     fi
     (cd "$ROOTDIR/Spaceship/" && unzip "$srcdir/$spaceshipzip" && mv "$spaceshipdir/Natron_project/Sources" .)
