@@ -315,7 +315,7 @@ if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
     if [ ! -f "$srcdir/$spaceshipzip" ]; then
         (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/$spaceshipzip")
     fi
-    (cd "$ROOTDIR/Spaceship/" && unzip "$srcdir/$spaceshipzip" && mv "$spaceshipdir/Natron_project/Sources" .)
+    (cd "$ROOTDIR/Spaceship/" && unzip -qq "$srcdir/$spaceshipzip" && mv "$spaceshipdir/Natron_project/Sources" .)
     if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
         echo "Error: cannot unzip spaceship assets"
         exit 1
@@ -325,7 +325,7 @@ if [ ! -d "$ROOTDIR/BayMax/Robot" ]; then
     if [ ! -f "$srcdir/$baymaxzip" ]; then
         (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/$baymaxzip")
     fi
-    (cd "$ROOTDIR/BayMax/" && unzip "$srcdir/$baymaxzip" && mv "$baymaxdir/Robot" .)
+    (cd "$ROOTDIR/BayMax/" && unzip -qq "$srcdir/$baymaxzip" && mv "$baymaxdir/Robot" .)
     if [ ! -d "$ROOTDIR/BayMax/Robot" ]; then
         echo "Error: cannot unzip baymax assets"
         exit 1
