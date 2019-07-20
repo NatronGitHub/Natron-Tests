@@ -311,6 +311,8 @@ baymaxdir="Natron_2.3.12_BayMax"
 # user can specify where to find SpaceShip and BayMax sources using the SRCDIR env var
 srcdir="${SRCDIR:-$ROOTDIR}"
 
+if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
+    if [ ! -f "$srcdir/$spaceshipdir" ]; then
         (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/$spaceshipzip")
     fi
     (cd "$ROOTDIR/Spaceship/" && unzip "$srcdir/$spaceshipzip" && mv "$spaceshipdir/Natron_project/Sources" .)
