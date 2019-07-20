@@ -19,7 +19,7 @@
 
 set -e # Exit immediately if a command exits with a non-zero status.
 set -u # Treat unset variables as an error when substituting.
-set -x # Print commands and their arguments as they are executed.
+#set -x # Print commands and their arguments as they are executed.
 
 echo "*** Natron tests"
 
@@ -81,9 +81,6 @@ IDIFF_OPTS=("-warn" "0.001" "-fail" "0.001" "-failpercent" "0.1" "-hardfail" "0.
 IDIFF_OPTS=("-warn" "0.001" "-fail" "0.008" "-failpercent" "0.2" "-hardfail" "0.08" "-abs" "-scale" "30")
 
 CUSTOM_DIRS="
-TestCMD
-TestPY
-TestWriteFFmpeg
 TestWritePNG
 "
 
@@ -102,15 +99,31 @@ ROOTDIR=$(pwd)
 curlopts="--location --continue-at -"
 CURL="curl $curlopts"
 EXAMPLES_URL=https://sourceforge.net/projects/natron/files/Examples
+spaceshipzip="Natron_2.3.12_Spaceship.zip"
+spaceshipdir="Natron_2.3.12_Spaceship"
+baymaxzip="Natron_2.3.12_BayMax.zip"
+baymaxdir="Natron_2.3.12_BayMax"
 
 # user can specify where to find SpaceShip and BayMax sources using the SRCDIR env var
 srcdir="${SRCDIR:-$ROOTDIR}"
 
-if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
-    (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/Natron_2.3.12_Spaceship.zip") && (cd "$ROOTDIR/Spaceship/" && unzip "$srcdir/Natron_2.3.12_Spaceship.zip" && mv Natron_2.3.12_Spaceship/Natron_project/Sources .)
+        (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/$spaceshipzip")
+    fi
+    (cd "$ROOTDIR/Spaceship/" && unzip "$srcdir/$spaceshipzip" && mv "$spaceshipdir/Natron_project/Sources" .)
+    if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
+        echo "Error: cannot unzip spaceship assets"
+        exit 1
+    fi
 fi
 if [ ! -d "$ROOTDIR/BayMax/Robot" ]; then
-    (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/Natron_2.3.12_BayMax.zip") && (cd "$ROOTDIR/BayMax/" && unzip "$srcdir/Natron_2.3.12_BayMax.zip" && mv Natron_2.3.12_BayMax/Robot .)
+    if [ ! -f "$srcdir/$baymaxzip" ]; then
+        (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/$baymaxzip")
+    fi
+    (cd "$ROOTDIR/BayMax/" && unzip "$srcdir/$baymaxzip" && mv "$baymaxdir/Robot" .)
+    if [ ! -d "$ROOTDIR/BayMax/Robot" ]; then
+        echo "Error: cannot unzip baymax assets"
+        exit 1
+    fi
 fi
 
 RENDERER_BIN="$1"
@@ -194,7 +207,7 @@ for t in $TEST_DIRS; do
     echo "writer = app.$WRITER_NODE_NAME"
     echo "inputNode = app.$OUTPUTNODE"
     echo "writer.connectInput(0, inputNode)"
-    
+
     #Set the output filename
     echo "writer.filename.set(\"[Project]/output#.$IMAGES_FILE_EXT\")"
     #Set the output plugin
