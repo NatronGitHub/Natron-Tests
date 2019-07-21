@@ -366,7 +366,7 @@ for t in $TEST_DIRS; do
     failseq=0
 
 
-    echo "$(date '+%Y-%m-%d %H:%M:%S') *** ===================$t========================"
+    echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** ===================$t========================"
     ############################################
     for CONFFILE in conf conf2 conf3 conf4 conf5; do
         failconf=0
@@ -446,13 +446,13 @@ for t in $TEST_DIRS; do
         echo "TestTile crashes on Linux64, and this script quits before printing *** END TestTile, I do not understand why"
         failconf=1
     else
-        echo "$(date '+%Y-%m-%d %H:%M:%S') *** START render $t/$CONFFILE"
+        echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** START render $t/$CONFFILE"
         renderfail=0
         env NATRON_PLUGIN_PATH="${plugin_path}" $TIMEOUT -s KILL 3600 "$RENDERER_BIN" ${OPTS[@]+"${OPTS[@]}"} -w "$WRITER_NODE_NAME" -l "$CWD/$TMP_SCRIPT" "$NATRONPROJ" || renderfail=1
         if [ "$renderfail" != "1" ]; then
-            echo "$(date '+%Y-%m-%d %H:%M:%S') *** END render $t/$CONFFILE"
+            echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** END render $t/$CONFFILE"
         else
-            echo "$(date '+%Y-%m-%d %H:%M:%S') *** END render $t/$CONFFILE (WARNING: render failed)"
+            echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** END render $t/$CONFFILE (WARNING: render failed)"
 	    # ignore failure, but check the output images
         fi
     fi
@@ -519,10 +519,10 @@ for t in $TEST_DIRS; do
     #############################################
     
     if [ "$failseq" != "1" ]; then
-        echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $t"
+        echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** PASS $t"
         echo "$t : PASS" >> "$RESULTS"
     else
-        echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $t"
+        echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** FAIL $t"
         echo "$t : FAIL" >> "$RESULTS"
     fi
     failseq="0"
@@ -532,21 +532,21 @@ done
 for x in $CUSTOM_DIRS; do
     pushd "$x"
     failcustom=0
-    echo "$(date '+%Y-%m-%d %H:%M:%S') *** ===================$x========================"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $x"
+    echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** ===================$x========================"
+    echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** START $x"
     $TIMEOUT -s KILL 3600 bash script.sh "$RENDERER_BIN" "$FFMPEG_BIN" "$IDIFF_BIN" || failcustom=1
     if [ "$failcustom" != "1" ]; then
-        echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $x"
+        echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** PASS $x"
         echo "$x : PASS" >> "$RESULTS"
     else
-        echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $x"
+        echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** FAIL $x"
         echo "$x : FAIL" >> "$RESULTS"
     fi
-    echo "$(date '+%Y-%m-%d %H:%M:%S') *** END $x"
+    echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** END $x"
     popd # "$x"
 done
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') *** RESULTS:"
+echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** RESULTS:"
 cat "$RESULTS"
 
 # Local Variables:
