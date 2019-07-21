@@ -80,6 +80,20 @@ IDIFF_OPTS=("-warn" "0.001" "-fail" "0.001" "-failpercent" "0.1" "-hardfail" "0.
 # tuned to pass BayMax and Spaceship:
 IDIFF_OPTS=("-warn" "0.001" "-fail" "0.008" "-failpercent" "0.2" "-hardfail" "0.08" "-abs" "-scale" "30")
 
+if [ -n "${TEST:+x}" ]; then
+CUSTOM_DIRS=""
+TEST_DIRS="$TEST"
+elif [ -n "${TESTCUSTOM:+x}" ]; then
+CUSTOM_DIRS="$TESTCUSTOM"
+TEST_DIRS=""
+else
+
+echo "Running all tests..."
+echo "Note:"
+echo "- to execute a single test, set the env variable TEST to the name of that test."
+echo "- to execute a custom test, set the env variable TESTCUSTOM to the name of that test."
+
+
 CUSTOM_DIRS="
 TestCMD
 TestPY
@@ -291,6 +305,8 @@ BayMax
 GNUVolador
 Spaceship
 "
+
+fi
 
 if [ $# != 1 ] || [ \( "$1" != "clean" -a ! -x "$1" \) ]; then
     echo "Usage: $0 <absolute path to NatronRenderer binary>"
