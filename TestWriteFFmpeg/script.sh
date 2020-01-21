@@ -28,7 +28,7 @@ IDIFF_BIN="$3"
 # fail if more than 0.1% of pixels have an error larger than 0.001 or if any pixel has an error larger than 0.01
 IDIFF_OPTS=("-fail" "0.001" "-failpercent" "0.1" "-hardfail" "0.01" "-abs" "-scale" "100")
 CWD="$PWD"
-NAME=TestWriteFFMpeg
+NAME=TestWriteFFmpeg
 uname="$(uname)"
 IMAGES_FILE_EXT=jpg
 FIRST_FRAME=1
