@@ -61,16 +61,17 @@ for x in $FORMATS/*; do
   if [ ! -f "$x/format" ]; then
       continue
   fi
+  f="${NAME}/$(basename "$x")"
   pushd "$x"
-  echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $x"
+  echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $f"
   FORMAT="$(cat format)"
   rm -f output* res comp*
   renderfail=0
   env NATRON_PLUGIN_PATH="${plugin_path}" $TIMEOUT -s KILL 1800 "$RENDERER_BIN" ${OPTS[@]+"${OPTS[@]}"} test.ntp  || renderfail=1
   if [ "$renderfail" != "1" ]; then
-      echo "$(date '+%Y-%m-%d %H:%M:%S') *** END render $x"
+      echo "$(date '+%Y-%m-%d %H:%M:%S') *** END render $f"
   else
-      echo "$(date '+%Y-%m-%d %H:%M:%S') *** END render $x (WARNING: render failed)"
+      echo "$(date '+%Y-%m-%d %H:%M:%S') *** END render $f (WARNING: render failed)"
       # ignore failure, but check the output images
   fi
   ffmpegfail=1
@@ -81,9 +82,9 @@ for x in $FORMATS/*; do
       set +x
   fi
   if [ "$ffmpegfail" != "1" ]; then
-      echo "$(date '+%Y-%m-%d %H:%M:%S') *** END ffmpeg $x"
+      echo "$(date '+%Y-%m-%d %H:%M:%S') *** END ffmpeg $f"
   else
-      echo "$(date '+%Y-%m-%d %H:%M:%S') *** END ffmpeg $x (WARNING: ffmpeg failed)"
+      echo "$(date '+%Y-%m-%d %H:%M:%S') *** END ffmpeg $f (WARNING: ffmpeg failed)"
       # ignore failure, but check the output images
   fi
 
@@ -117,11 +118,11 @@ for x in $FORMATS/*; do
       fi
   done
   if [ "$TEST_FAIL" = 0 ] && [ "$TEST_PASS" = "$LAST_FRAME" ]; then
-      echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $x"
-      echo "$x : PASS" >> "$RESULTS"
+      echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $f"
+      echo "$f : PASS" >> "$RESULTS"
   else
-      echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $x"
-      echo "$x : FAIL" >> "$RESULTS"
+      echo "$(date '+%Y-%m-%d %H:%M:%S') *** FAIL $f"
+      echo "$f : FAIL" >> "$RESULTS"
   fi
   #  rm -f output* res comp*
   popd
