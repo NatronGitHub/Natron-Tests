@@ -238,11 +238,8 @@ TestRGBLAB
 TestRGBX_Y_Z
 TestRGBYCbCr
 TestRGBYUV
-TestReadAVI_avc1
 TestReadAVI_flv1
 TestReadAVI_jpg
-TestReadAVI_m1v
-TestReadAVI_m2v1
 TestReadAVI_mp4v
 TestReadAVI_png
 TestReadAVI_svq1
