@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <!DOCTYPE boost_serialization>
-<boost_serialization signature="serialization::archive" version="13">
+<boost_serialization signature="serialization::archive" version="17">
 <Background_project>0</Background_project>
 <Project class_id="0" tracking_level="0" version="6">
 	<VersionMajor>2</VersionMajor>
-	<VersionMinor>2</VersionMinor>
-	<VersionRev>1</VersionRev>
-	<GitBranch>tags/2.2.1</GitBranch>
-	<GitCommit>35e7f95eddb80d4117b9dd18177f933f6f7b9862</GitCommit>
+	<VersionMinor>3</VersionMinor>
+	<VersionRev>15</VersionRev>
+	<GitBranch>tags/v2.3.15</GitBranch>
+	<GitCommit>513a2491008c152417ae913f8d1ab83e432aa7e3</GitCommit>
 	<OS>MacOSX</OS>
 	<Bits>64</Bits>
 	<NodesCollection class_id="1" tracking_level="0" version="1">
@@ -39,7 +39,7 @@
 			<Children>0</Children>
 			<UserComponents class_id="5" tracking_level="0" version="0">
 				<count>0</count>
-				<item_version>0</item_version>
+				<item_version>2</item_version>
 			</UserComponents>
 			<CacheID>Viewer1</CacheID>
 		</item>
@@ -51,8 +51,8 @@
 			<PythonModuleVersion>0</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>
-			<KnobsCount>21</KnobsCount>
-			<item class_id="6" tracking_level="0" version="13">
+			<KnobsCount>19</KnobsCount>
+			<item class_id="6" tracking_level="0" version="14">
 				<Name>encodingPluginChoice</Name>
 				<Type>Choice</Type>
 				<Dimension>1</Dimension>
@@ -144,7 +144,7 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<ChoiceLabel>Input Format</ChoiceLabel>
+				<ChoiceLabel>input</ChoiceLabel>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -162,7 +162,7 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<ChoiceLabel>square_256 256x256</ChoiceLabel>
+				<ChoiceLabel>square_256</ChoiceLabel>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -265,7 +265,7 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<ChoiceLabel>Opaque</ChoiceLabel>
+				<ChoiceLabel>opaque</ChoiceLabel>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -300,27 +300,6 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<UserKnob>0</UserKnob>
-			</item>
-			<item>
-				<Name>NatronOfxParamStringSublabelName</Name>
-				<Type>String</Type>
-				<Dimension>1</Dimension>
-				<Secret>1</Secret>
-				<MasterIsAlias>0</MasterIsAlias>
-				<item>
-					<Enabled>0</Enabled>
-					<HasAnimation>0</HasAnimation>
-					<Value>reference1.jpg</Value>
-					<Default></Default>
-					<HasMaster>0</HasMaster>
-					<Expression></Expression>
-					<ExprHasRet>0</ExprHasRet>
-				</item>
-				<StringsAnimation>
-					<count>0</count>
-					<item_version>0</item_version>
-				</StringsAnimation>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -393,27 +372,6 @@
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
-				<Name>outputChannelsChoice</Name>
-				<Type>String</Type>
-				<Dimension>1</Dimension>
-				<Secret>1</Secret>
-				<MasterIsAlias>0</MasterIsAlias>
-				<item>
-					<Enabled>0</Enabled>
-					<HasAnimation>0</HasAnimation>
-					<Value>Color.RGBA</Value>
-					<Default></Default>
-					<HasMaster>0</HasMaster>
-					<Expression></Expression>
-					<ExprHasRet>0</ExprHasRet>
-				</item>
-				<StringsAnimation>
-					<count>0</count>
-					<item_version>0</item_version>
-				</StringsAnimation>
-				<UserKnob>0</UserKnob>
-			</item>
-			<item>
 				<Name>partSplitting</Name>
 				<Type>Choice</Type>
 				<Dimension>1</Dimension>
@@ -428,7 +386,7 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<ChoiceLabel>Single Part</ChoiceLabel>
+				<ChoiceLabel>single</ChoiceLabel>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -466,11 +424,11 @@
 			<PagesCount>3</PagesCount>
 			<name>Controls</name>
 			<name>Node</name>
-			<name>Python</name>
+			<name>Info</name>
 			<Children>0</Children>
 			<UserComponents>
 				<count>0</count>
-				<item_version>0</item_version>
+				<item_version>2</item_version>
 			</UserComponents>
 			<CacheID>WriteOIIO1</CacheID>
 		</item>
@@ -690,7 +648,7 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<ChoiceLabel>Opaque</ChoiceLabel>
+				<ChoiceLabel>opaque</ChoiceLabel>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -708,7 +666,7 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<ChoiceLabel>Opaque</ChoiceLabel>
+				<ChoiceLabel>opaque</ChoiceLabel>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -744,27 +702,6 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<UserKnob>0</UserKnob>
-			</item>
-			<item>
-				<Name>NatronOfxParamStringSublabelName</Name>
-				<Type>String</Type>
-				<Dimension>1</Dimension>
-				<Secret>1</Secret>
-				<MasterIsAlias>0</MasterIsAlias>
-				<item>
-					<Enabled>0</Enabled>
-					<HasAnimation>0</HasAnimation>
-					<Value>input.cr2</Value>
-					<Default></Default>
-					<HasMaster>0</HasMaster>
-					<Expression></Expression>
-					<ExprHasRet>0</ExprHasRet>
-				</item>
-				<StringsAnimation>
-					<count>0</count>
-					<item_version>0</item_version>
-				</StringsAnimation>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -820,7 +757,7 @@
 					<Expression></Expression>
 					<ExprHasRet>0</ExprHasRet>
 				</item>
-				<ChoiceLabel>Auto</ChoiceLabel>
+				<ChoiceLabel>auto</ChoiceLabel>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -849,7 +786,7 @@
 				<item>
 					<Enabled>0</Enabled>
 					<HasAnimation>0</HasAnimation>
-					<Value>scene_linear</Value>
+					<Value>sRGB</Value>
 					<Default>scene_linear</Default>
 					<HasMaster>0</HasMaster>
 					<Expression></Expression>
@@ -859,6 +796,23 @@
 					<count>0</count>
 					<item_version>0</item_version>
 				</StringsAnimation>
+				<UserKnob>0</UserKnob>
+			</item>
+			<item>
+				<Name>ocioInputSpaceSet</Name>
+				<Type>Bool</Type>
+				<Dimension>1</Dimension>
+				<Secret>1</Secret>
+				<MasterIsAlias>0</MasterIsAlias>
+				<item>
+					<Enabled>0</Enabled>
+					<HasAnimation>0</HasAnimation>
+					<Value>1</Value>
+					<Default>0</Default>
+					<HasMaster>0</HasMaster>
+					<Expression></Expression>
+					<ExprHasRet>0</ExprHasRet>
+				</item>
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
@@ -886,7 +840,7 @@
 				<count>0</count>
 				<item_version>0</item_version>
 			</Inputs_map>
-			<KnobsAge>13</KnobsAge>
+			<KnobsAge>17</KnobsAge>
 			<MasterNode></MasterNode>
 			<HasRotoContext>0</HasRotoContext>
 			<HasTrackerContext>0</HasTrackerContext>
@@ -899,7 +853,7 @@
 			<Children>0</Children>
 			<UserComponents>
 				<count>0</count>
-				<item_version>0</item_version>
+				<item_version>2</item_version>
 			</UserComponents>
 			<CacheID>ReadOIIO1</CacheID>
 		</item>
@@ -914,7 +868,7 @@
 		<item>
 			<Enabled>1</Enabled>
 			<HasAnimation>0</HasAnimation>
-			<Value>&lt;Name&gt;OCIO&lt;/Name&gt;&lt;Value&gt;/Applications/Natron.app/Contents/Resources/OpenColorIO-Configs/blender&lt;/Value&gt;&lt;Name&gt;Project&lt;/Name&gt;&lt;Value&gt;/Users/devernay/Development/Natron-Tests/TestImageCR2&lt;/Value&gt;</Value>
+			<Value>&lt;Name&gt;OCIO&lt;/Name&gt;&lt;Value&gt;/Applications/Natron 2.3.15 64.app/Contents/Resources/OpenColorIO-Configs/blender&lt;/Value&gt;&lt;Name&gt;Project&lt;/Name&gt;&lt;Value&gt;/Users/devernay/Development/Natron-Tests/TestImageCR2&lt;/Value&gt;</Value>
 			<Default></Default>
 			<HasMaster>0</HasMaster>
 			<Expression></Expression>
@@ -937,7 +891,7 @@
 			<Expression></Expression>
 			<ExprHasRet>0</ExprHasRet>
 		</item>
-		<ChoiceLabel> 5218x3482</ChoiceLabel>
+		<ChoiceLabel>5218x3482</ChoiceLabel>
 		<UserKnob>0</UserKnob>
 	</item>
 	<item>
@@ -975,7 +929,7 @@
 		<item>
 			<Enabled>0</Enabled>
 			<HasAnimation>0</HasAnimation>
-			<Value>dim. janv. 29 16:33:40 2017</Value>
+			<Value>jeu. mars 25 15:03:53 2021</Value>
 			<Default></Default>
 			<HasMaster>0</HasMaster>
 			<Expression></Expression>
@@ -1013,9 +967,9 @@
 			<X_position>6.33125000000000000e+02</X_position>
 			<Y_position>3.33125000000000000e+02</Y_position>
 			<Preview_enabled>0</Preview_enabled>
-			<r>6.99992359e-01</r>
-			<g>6.99992359e-01</g>
-			<b>6.99992359e-01</b>
+			<r>6.999923587e-01</r>
+			<g>6.999923587e-01</g>
+			<b>6.999923587e-01</b>
 			<Selected>0</Selected>
 			<Width>1.04000000000000000e+02</Width>
 			<Height>3.00000000000000000e+01</Height>
@@ -1027,12 +981,12 @@
 			<X_position>7.73125000000000000e+02</X_position>
 			<Y_position>3.08750000000000000e+02</Y_position>
 			<Preview_enabled>0</Preview_enabled>
-			<r>7.49996185e-01</r>
-			<g>7.49996185e-01</g>
-			<b>0.00000000e+00</b>
+			<r>7.499961853e-01</r>
+			<g>7.499961853e-01</g>
+			<b>0.000000000e+00</b>
 			<Selected>0</Selected>
 			<Width>1.04000000000000000e+02</Width>
-			<Height>5.10000000000000000e+01</Height>
+			<Height>4.30000000000000000e+01</Height>
 			<HasOverlayColor>0</HasOverlayColor>
 			<Children>0</Children>
 		</item>
@@ -1041,9 +995,9 @@
 			<X_position>6.83125000000000000e+02</X_position>
 			<Y_position>1.65000000000000000e+02</Y_position>
 			<Preview_enabled>1</Preview_enabled>
-			<r>6.99992359e-01</r>
-			<g>6.99992359e-01</g>
-			<b>6.99992359e-01</b>
+			<r>6.999923587e-01</r>
+			<g>6.999923587e-01</g>
+			<b>6.999923587e-01</b>
 			<Selected>0</Selected>
 			<Width>1.28000000000000000e+02</Width>
 			<Height>7.80000000000000000e+01</Height>
@@ -1056,11 +1010,11 @@
 		<Window class_id="16" tracking_level="0" version="1">
 			<ChildType>0</ChildType>
 			<Child class_id="17" tracking_level="1" version="1" object_id="_0">
-				<Sizes>940 506</Sizes>
+				<Sizes>893 481</Sizes>
 				<Orientation>1</Orientation>
 				<ChildIsSplitter>1</ChildIsSplitter>
 				<Child object_id="_1">
-					<Sizes>576 576</Sizes>
+					<Sizes>497 497</Sizes>
 					<Orientation>2</Orientation>
 					<ChildIsSplitter>0</ChildIsSplitter>
 					<Child class_id="18" tracking_level="1" version="5" object_id="_2">
@@ -1076,11 +1030,12 @@
 					<ChildIsSplitter>0</ChildIsSplitter>
 					<Child object_id="_3">
 						<Tabs>
-							<count>3</count>
+							<count>4</count>
 							<item_version>0</item_version>
 							<item>nodeGraph</item>
 							<item>curveEditor</item>
 							<item>dopeSheetEditor</item>
+							<item>progress</item>
 						</Tabs>
 						<Index>0</Index>
 						<Name>pane3</Name>
@@ -1100,10 +1055,10 @@
 				</Child>
 			</Child>
 			<MainWindow>1</MainWindow>
-			<x>367</x>
-			<y>23</y>
-			<w>1482</w>
-			<h>1155</h>
+			<x>105</x>
+			<y>25</y>
+			<w>1410</w>
+			<h>997</h>
 		</Window>
 	</Gui_Layout>
 	<ViewersData class_id="20" tracking_level="0" version="0">

@@ -381,6 +381,8 @@ for t in $TEST_DIRS; do
 
     echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** ===================$t========================"
     ############################################
+    rm output[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
+    rm comp[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
     for CONFFILE in conf conf2 conf3 conf4 conf5; do
         failconf=0
     if [[ ! -f "$CONFFILE" ]]; then
@@ -406,8 +408,6 @@ for t in $TEST_DIRS; do
     fi
 
     rm res &> /dev/null || true
-    rm output[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
-    rm comp[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
 
     touch $TMP_SCRIPT
     {
