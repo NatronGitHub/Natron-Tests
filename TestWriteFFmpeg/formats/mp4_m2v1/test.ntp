@@ -5,9 +5,9 @@
 <Project class_id="0" tracking_level="0" version="6">
 	<VersionMajor>2</VersionMajor>
 	<VersionMinor>2</VersionMinor>
-	<VersionRev>6</VersionRev>
-	<GitBranch>RB-2.2</GitBranch>
-	<GitCommit>5104037737473a7d628ff976b19c4d29ec81fe72</GitCommit>
+	<VersionRev>9</VersionRev>
+	<GitBranch>tags/2.2.9</GitBranch>
+	<GitCommit>6b1777c23077fa68ee73e57e618ead4d38820699</GitCommit>
 	<OS>MacOSX</OS>
 	<Bits>64</Bits>
 	<NodesCollection class_id="1" tracking_level="0" version="1">
@@ -51,7 +51,7 @@
 			<PythonModuleVersion>0</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>
-			<KnobsCount>15</KnobsCount>
+			<KnobsCount>18</KnobsCount>
 			<item class_id="6" tracking_level="0" version="13">
 				<Name>decodingPluginID</Name>
 				<Type>String</Type>
@@ -300,6 +300,62 @@
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
+				<Name>outputLayerChoice</Name>
+				<Type>String</Type>
+				<Dimension>1</Dimension>
+				<Secret>1</Secret>
+				<MasterIsAlias>0</MasterIsAlias>
+				<item>
+					<Enabled>0</Enabled>
+					<HasAnimation>0</HasAnimation>
+					<Value>Color.YA</Value>
+					<Default></Default>
+					<HasMaster>0</HasMaster>
+					<Expression></Expression>
+					<ExprHasRet>0</ExprHasRet>
+				</item>
+				<StringsAnimation>
+					<count>0</count>
+					<item_version>0</item_version>
+				</StringsAnimation>
+				<UserKnob>0</UserKnob>
+			</item>
+			<item>
+				<Name>edgePixels</Name>
+				<Type>Choice</Type>
+				<Dimension>1</Dimension>
+				<Secret>1</Secret>
+				<MasterIsAlias>0</MasterIsAlias>
+				<item>
+					<Enabled>0</Enabled>
+					<HasAnimation>0</HasAnimation>
+					<Value>0</Value>
+					<Default>0</Default>
+					<HasMaster>0</HasMaster>
+					<Expression></Expression>
+					<ExprHasRet>0</ExprHasRet>
+				</item>
+				<ChoiceLabel>Auto</ChoiceLabel>
+				<UserKnob>0</UserKnob>
+			</item>
+			<item>
+				<Name>offsetNegativeDispWindow</Name>
+				<Type>Bool</Type>
+				<Dimension>1</Dimension>
+				<Secret>1</Secret>
+				<MasterIsAlias>0</MasterIsAlias>
+				<item>
+					<Enabled>0</Enabled>
+					<HasAnimation>0</HasAnimation>
+					<Value>1</Value>
+					<Default>1</Default>
+					<HasMaster>0</HasMaster>
+					<Expression></Expression>
+					<ExprHasRet>0</ExprHasRet>
+				</item>
+				<UserKnob>0</UserKnob>
+			</item>
+			<item>
 				<Name>ocioInputSpace</Name>
 				<Type>String</Type>
 				<Dimension>1</Dimension>
@@ -479,7 +535,7 @@
 			<PythonModuleVersion>0</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>
-			<KnobsCount>27</KnobsCount>
+			<KnobsCount>29</KnobsCount>
 			<item>
 				<Name>encodingPluginChoice</Name>
 				<Type>Choice</Type>
@@ -949,6 +1005,23 @@
 				<UserKnob>0</UserKnob>
 			</item>
 			<item>
+				<Name>qscale</Name>
+				<Type>Double</Type>
+				<Dimension>1</Dimension>
+				<Secret>0</Secret>
+				<MasterIsAlias>0</MasterIsAlias>
+				<item>
+					<Enabled>1</Enabled>
+					<HasAnimation>0</HasAnimation>
+					<Value>0.00000000000000000e+00</Value>
+					<Default>-1.00000000000000000e+00</Default>
+					<HasMaster>0</HasMaster>
+					<Expression></Expression>
+					<ExprHasRet>0</ExprHasRet>
+				</item>
+				<UserKnob>0</UserKnob>
+			</item>
+			<item>
 				<Name>bitrateMbps</Name>
 				<Type>Double</Type>
 				<Dimension>1</Dimension>
@@ -982,6 +1055,23 @@
 				</item>
 				<UserKnob>0</UserKnob>
 			</item>
+			<item>
+				<Name>bFrames</Name>
+				<Type>Int</Type>
+				<Dimension>1</Dimension>
+				<Secret>0</Secret>
+				<MasterIsAlias>0</MasterIsAlias>
+				<item>
+					<Enabled>1</Enabled>
+					<HasAnimation>0</HasAnimation>
+					<Value>0</Value>
+					<Default>-1</Default>
+					<HasMaster>0</HasMaster>
+					<Expression></Expression>
+					<ExprHasRet>0</ExprHasRet>
+				</item>
+				<UserKnob>0</UserKnob>
+			</item>
 			<Inputs_map>
 				<count>1</count>
 				<item_version>0</item_version>
@@ -990,7 +1080,7 @@
 					<second>Transform1</second>
 				</item>
 			</Inputs_map>
-			<KnobsAge>20</KnobsAge>
+			<KnobsAge>22</KnobsAge>
 			<MasterNode></MasterNode>
 			<HasRotoContext>0</HasRotoContext>
 			<HasTrackerContext>0</HasTrackerContext>
@@ -1018,7 +1108,7 @@
 		<item>
 			<Enabled>1</Enabled>
 			<HasAnimation>0</HasAnimation>
-			<Value>&lt;Name&gt;OCIO&lt;/Name&gt;&lt;Value&gt;/Applications/Natron.app/Contents/Resources/OpenColorIO-Configs/blender&lt;/Value&gt;&lt;Name&gt;Project&lt;/Name&gt;&lt;Value&gt;/Users/devernay/Development/Natron-Tests/TestWriteFFmpeg/formats/mp43&lt;/Value&gt;</Value>
+			<Value>&lt;Name&gt;OCIO&lt;/Name&gt;&lt;Value&gt;/Applications/Natron 2.2.9.app/Contents/Resources/OpenColorIO-Configs/blender&lt;/Value&gt;&lt;Name&gt;Project&lt;/Name&gt;&lt;Value&gt;/Users/devernay/Development/Natron-Tests/TestWriteFFmpeg/formats/mp4_m2v1&lt;/Value&gt;</Value>
 			<Default></Default>
 			<HasMaster>0</HasMaster>
 			<Expression></Expression>
@@ -1079,7 +1169,7 @@
 		<item>
 			<Enabled>0</Enabled>
 			<HasAnimation>0</HasAnimation>
-			<Value>lun. mars 27 15:05:33 2017</Value>
+			<Value>ven. mars 26 16:16:04 2021</Value>
 			<Default></Default>
 			<HasMaster>0</HasMaster>
 			<Expression></Expression>
@@ -1164,11 +1254,11 @@
 		<Window class_id="17" tracking_level="0" version="1">
 			<ChildType>0</ChildType>
 			<Child class_id="18" tracking_level="1" version="1" object_id="_0">
-				<Sizes>1222 658</Sizes>
+				<Sizes>893 481</Sizes>
 				<Orientation>1</Orientation>
 				<ChildIsSplitter>1</ChildIsSplitter>
 				<Child object_id="_1">
-					<Sizes>576 576</Sizes>
+					<Sizes>497 497</Sizes>
 					<Orientation>2</Orientation>
 					<ChildIsSplitter>0</ChildIsSplitter>
 					<Child class_id="19" tracking_level="1" version="5" object_id="_2">
@@ -1208,10 +1298,10 @@
 				</Child>
 			</Child>
 			<MainWindow>1</MainWindow>
-			<x>121</x>
-			<y>102</y>
-			<w>1916</w>
-			<h>1155</h>
+			<x>143</x>
+			<y>25</y>
+			<w>1410</w>
+			<h>997</h>
 		</Window>
 	</Gui_Layout>
 	<ViewersData class_id="21" tracking_level="0" version="0">
