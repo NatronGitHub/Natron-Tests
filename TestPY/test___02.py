@@ -41,3 +41,4 @@ f2.close()
 with open('test___02-output-tmp.txt') as f:
     numsum = sum(1 for _ in f)
 print(numsum, file=f1)
+f1.close()
