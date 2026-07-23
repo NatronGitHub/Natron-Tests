@@ -321,12 +321,49 @@ spaceshipdir="Natron_2.3.12_Spaceship"
 baymaxzip="Natron_2.3.12_BayMax.zip"
 baymaxdir="Natron_2.3.12_BayMax"
 
+# Fallback mirrors, used when SourceForge auto-selects a mirror that is
+# unreachable from the build host (e.g. DNS for that mirror times out).
+SF_MIRRORS="phoenixnap.dl.sourceforge.net cfhcable.dl.sourceforge.net master.dl.sourceforge.net netix.dl.sourceforge.net netcologne.dl.sourceforge.net downloads.sourceforge.net"
+
+# download_sf_example FILE
+#   Robustly download an asset from the SourceForge "natron/Examples" project
+#   into the current directory, and verify it is a valid zip.
+#   SourceForge 302-redirects each download to an auto-selected mirror with a
+#   per-file signed token (?viasf&fid&st) that is NOT bound to a specific mirror
+#   host. If the auto-selected mirror is unreachable we retry the SAME signed
+#   URL against SF_MIRRORS. Each transfer is validated with `unzip -t` so
+#   truncated/corrupt downloads are rejected and the next mirror is tried.
+download_sf_example() {
+    dl_file="$1"
+    dl_url="https://downloads.sourceforge.net/project/natron/Examples/${dl_file}"
+    # signed redirect target (single hop; does not connect to the mirror yet)
+    dl_loc=$(curl -sI --max-time 60 "$dl_url" | awk 'tolower($1)=="location:"{print $2}' | tr -d '\r' | tail -1)
+    [ -n "$dl_loc" ] || dl_loc="$dl_url"
+    for dl_host in __auto__ $SF_MIRRORS; do
+        if [ "$dl_host" = "__auto__" ]; then
+            dl_try="$dl_loc"
+        else
+            dl_try=$(printf '%s' "$dl_loc" | sed -E "s#https?://[^/]+/#https://${dl_host}/#")
+        fi
+        rm -f "$dl_file"
+        echo "  downloading ${dl_file} (mirror: ${dl_host}) ..."
+        if curl -fL --retry 2 --retry-all-errors --retry-delay 3 --max-time 1800 -o "$dl_file" "$dl_try" \
+           && unzip -tqq "$dl_file" >/dev/null 2>&1; then
+            return 0
+        fi
+    done
+    rm -f "$dl_file"
+    echo "Error: could not download ${dl_file} from any SourceForge mirror"
+    return 1
+}
+
 # user can specify where to find SpaceShip and BayMax sources using the SRCDIR env var
 srcdir="${SRCDIR:-$ROOTDIR}"
 
 if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
-    if [ ! -f "$srcdir/$spaceshipzip" ]; then
-        (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/$spaceshipzip")
+    # (re)download if the cached zip is missing or not a valid archive
+    if [ ! -f "$srcdir/$spaceshipzip" ] || ! unzip -tqq "$srcdir/$spaceshipzip" >/dev/null 2>&1; then
+        ( cd "$srcdir" && download_sf_example "$spaceshipzip" ) || exit 1
     fi
     (cd "$ROOTDIR/Spaceship/" && unzip -o -qq "$srcdir/$spaceshipzip" && mv "$spaceshipdir/Natron_project/Sources" .)
     if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
@@ -335,8 +372,8 @@ if [ ! -d "$ROOTDIR/Spaceship/Sources" ]; then
     fi
 fi
 if [ ! -d "$ROOTDIR/BayMax/Robot" ]; then
-    if [ ! -f "$srcdir/$baymaxzip" ]; then
-        (cd "$srcdir"; $CURL --remote-name "$EXAMPLES_URL/$baymaxzip")
+    if [ ! -f "$srcdir/$baymaxzip" ] || ! unzip -tqq "$srcdir/$baymaxzip" >/dev/null 2>&1; then
+        ( cd "$srcdir" && download_sf_example "$baymaxzip" ) || exit 1
     fi
     (cd "$ROOTDIR/BayMax/" && unzip -o -qq "$srcdir/$baymaxzip" && mv "$baymaxdir/Robot" .)
     if [ ! -d "$ROOTDIR/BayMax/Robot" ]; then
