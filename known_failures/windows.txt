@@ -1,2 +1,3 @@
-# Known failures on windows only (see README.md). Keep this list short: most known failures
+# Known failures on Windows only (see README.md). Keep this list short: most known failures
 # should be in common.txt.
+# Empty until a Natron 2.6 run on Windows (UCRT64) fills it (NatronGitHub/Natron#1629).
