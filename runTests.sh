@@ -27,7 +27,8 @@ case "$(uname -s)" in
 Linux)
     PKGOS=Linux
     ;;
-Msys|MINGW64_NT-*|MINGW32_NT-*)
+Msys|MSYS_NT-*|MINGW64_NT-*|MINGW32_NT-*|UCRT64_NT-*|CLANG64_NT-*|CLANGARM64_NT-*)
+    # MSYS2: uname -s is "<MSYSTEM>_NT-<Windows version>"
     PKGOS=Windows
     set -x # uncomment to get verbose tests on Windows
     ;;
@@ -35,7 +36,7 @@ Darwin)
     PKGOS=OSX
     ;;
 *)
-    echo "$CHECK_OS not supported!"
+    echo "$(uname -s) not supported!"
     exit 1
     ;;
 esac
@@ -56,16 +57,12 @@ if [ "$(uname -s)" = "Darwin" ]; then
 else
     TIMEOUT="timeout"
 fi
-# seq: GNU coreutils' gseq, or macOS's own /usr/bin/seq (same output for "seq FIRST LAST")
-if [ "$(uname -s)" = "Darwin" ] && command -v gseq > /dev/null 2>&1; then
-    SEQ_BIN=gseq
-else
-    SEQ_BIN=seq
-fi
+# seq lists the frames to compare (macOS, Linux and MSYS2 have one; GNU's gseq is not needed)
+SEQ_BIN=seq
 # without them, no frame is compared or every render is killed: fail now
 for tool in "$TIMEOUT" "$SEQ_BIN"; do
     if ! command -v "$tool" > /dev/null 2>&1; then
-        echo "Error: $tool not found (on macOS: sudo port install coreutils, or brew install coreutils)"
+        echo "Error: $tool not found (gtimeout on macOS: sudo port install coreutils, or brew install coreutils)"
         exit 1
     fi
 done
@@ -508,7 +505,7 @@ for t in $TEST_DIRS; do
 
     #Start rendering, silent stdout
     #Note that we append the current directory to the NATRON_PLUGIN_PATH so it finds any PyPlug or script in there
-    if [ "$uname" = "Msys" ]; then
+    if [ "$PKGOS" = "Windows" ]; then
         plugin_path="${CWD};${NATRON_PLUGIN_PATH:-}"
     else
         plugin_path="${CWD}:${NATRON_PLUGIN_PATH:-}"
@@ -630,19 +627,17 @@ done
 
 # Known failures (see known_failures/README.md): the tests listed in known_failures/common.txt and
 # in the platform's list (macos.txt, linux.txt, windows.txt) are reported as "KNOWN FAIL" when they
-# fail, and as "UNEXPECTED PASS" when they pass (the list must then be updated). KNOWN_FAILURES
-# (a space-separated list of files) replaces the default lists.
+# fail, and as "UNEXPECTED PASS" when they pass (the list must then be updated).
 case "$PKGOS" in
     OSX) kf_platform=macos ;;
     Linux) kf_platform=linux ;;
     Windows) kf_platform=windows ;;
 esac
-KNOWN_FAILURES=${KNOWN_FAILURES:-"$ROOTDIR/known_failures/common.txt $ROOTDIR/known_failures/$kf_platform.txt"}
 known=" "
-for f in $KNOWN_FAILURES; do
+for f in "$ROOTDIR/known_failures/common.txt" "$ROOTDIR/known_failures/$kf_platform.txt"; do
     if [ ! -f "$f" ]; then
-        echo "Warning: known failures file $f not found"
-        continue
+        echo "Error: known failures file $f not found"
+        exit 1
     fi
     known="$known$(sed -e 's/#.*//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$f" | grep -v '^$' | tr '\n' ' ' || true)"
 done
@@ -688,25 +683,16 @@ cat "$RESULTS"
     echo "UNEXPECTED PASS: $nunexpected${unexpected_tests:+ ($unexpected_tests ) -- remove them from known_failures/}"
     if [ -n "$notrun" ]; then echo "KNOWN FAILURES NOT RUN:$notrun -- remove them from known_failures/ if they no longer exist"; fi
 } > "$ROOTDIR/summary.txt"
-echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** SUMMARY (known failures: $KNOWN_FAILURES):"
+echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** SUMMARY (known failures: known_failures/common.txt and $kf_platform.txt):"
 cat "$ROOTDIR/summary.txt"
 if [ "$nunexpected" -gt 0 ]; then
     echo "WARNING: $nunexpected known failures passed:$unexpected_tests. Update known_failures/."
 fi
 
-# Exit status: 1 if a test failed that is not a known failure. An unexpected pass is reported but
-# doesn't fail the run (it means a fix, which other platforms' lists may not reflect yet), unless
-# KNOWN_FAILURES_STRICT=1, which makes it exit 3.
+# Exit status: 1 if a test failed that is not a known failure. An unexpected pass is reported
+# (result.txt, summary.txt and the WARNING above) but doesn't fail the run: it means a fix, and the
+# run of another branch or platform must not fail because a list wasn't updated yet.
 if [ "$nfail" -gt 0 ]; then
     exit 1
 fi
-if [ "$nunexpected" -gt 0 ] && [ "${KNOWN_FAILURES_STRICT:-0}" = 1 ]; then
-    exit 3
-fi
 exit 0
-
-# Local Variables:
-# indent-tabs-mode: nil
-# sh-basic-offset: 4
-# sh-indentation: 4
-# End:

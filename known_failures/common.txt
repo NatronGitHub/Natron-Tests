@@ -1,8 +1,10 @@
 # Known failures on every platform (see README.md): one test name per line, as in result.txt,
 # with the reason and the NatronGitHub/Natron issue. Seen on macOS 14 and 27 (arm64, Natron 2.6),
 # with identical errors; to be confirmed on Linux and Windows (NatronGitHub/Natron#1629).
+# Not listed, on purpose: TestWriteFFmpeg/mov_AVdn (regression test of NatronGitHub/Natron#1601)
+# and TestMultiPlanePSD/TestMultiPlaneXCF (missing layers, NatronGitHub/Natron#1632).
 
-# FFmpeg: references written as JPEG by an old FFmpeg
+# FFmpeg (NatronGitHub/Natron#1600: PNG outputs and references)
 TestWriteFFmpeg/avi_3IVD # compare via 16-bit PNG, NatronGitHub/Natron#1600
 TestWriteFFmpeg/avi_cvid # compare via 16-bit PNG, NatronGitHub/Natron#1600
 TestWriteFFmpeg/avi_jpeg # compare via 16-bit PNG, NatronGitHub/Natron#1600
@@ -29,28 +31,26 @@ TestWriteFFmpeg/mp4_m2v1 # compare via 16-bit PNG, NatronGitHub/Natron#1600
 TestWriteFFmpeg/mp4_mjp2 # compare via 16-bit PNG, NatronGitHub/Natron#1600
 TestWriteFFmpeg/mp4_mp4v # compare via 16-bit PNG, NatronGitHub/Natron#1600
 TestWriteFFmpeg/mp4_png # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestReadAVI_flv1 # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadAVI_mp4v # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMOV_flv1 # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMOV_m1v # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMOV_m2v1 # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMOV_mp4v # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMP4_m1v # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMP4_m2v1 # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMP4_mp4v # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMPEG1 # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
-TestReadMXF # FFmpeg 9 decode vs the JPEG references, NatronGitHub/Natron#1630
+TestReadAVI_flv1 # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadAVI_mp4v # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMOV_flv1 # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMOV_m1v # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMOV_m2v1 # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMOV_mp4v # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMP4_m1v # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMP4_m2v1 # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMP4_mp4v # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMPEG1 # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
+TestReadMXF # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
 
 # PSD and XCF readers (openfx-arena, ImageMagick 7)
-TestImagePSD # alpha / premultiplication, NatronGitHub/Natron#1630
-TestImageXCF # alpha / premultiplication, NatronGitHub/Natron#1630
-TestMultiPlanePSD # the other layers are missing from the output: possible regression, NatronGitHub/Natron#1630
-TestMultiPlaneXCF # same as TestMultiPlanePSD, NatronGitHub/Natron#1630
+TestImagePSD # alpha / premultiplication; until the psd-xcf-unpremultiplied reference branch lands, NatronGitHub/Natron#1630
+TestImageXCF # alpha / premultiplication; until the psd-xcf-unpremultiplied reference branch lands, NatronGitHub/Natron#1630
 
 # other plug-ins
 TestCharcoal # openfx-arena Charcoal 2.x/3.0, ImageMagick 7, NatronGitHub/Natron#1630
 TestEqualize # failed with 2.5.0 on every platform too, NatronGitHub/Natron#1630
 TestSeExpr # the noise pattern differs slightly, NatronGitHub/Natron#1630
 TestPolar # small resampling or precision difference, NatronGitHub/Natron#1630
-TestCMD/1 # PNG with alpha to JPEG: the 2.5 reference has a bright rim, the 2.6 output is premultiplied, NatronGitHub/Natron#1630
+TestCMD/1 # PNG with alpha to JPEG: 2.6 writes premultiplied (by design, NatronGitHub/Natron#582), the 2.5 reference looks like the old bug; pending the maintainer's decision, NatronGitHub/Natron#1630
 TestCMD/2 # same as TestCMD/1, NatronGitHub/Natron#1630
