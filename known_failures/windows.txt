@@ -2,5 +2,4 @@
 # should be in common.txt.
 # From the 2.5.0 results until a Natron 2.6 run on Windows (UCRT64) checks them (NatronGitHub/Natron#1629).
 
-GNUVolador # failed with 2.5.0 on macOS and Windows, passed on Linux, NatronGitHub/Natron#1631
 TestTexture # failed with 2.5.0 on Windows only, NatronGitHub/Natron#1634

@@ -50,6 +50,7 @@ TestImageXCF # alpha / premultiplication; until the psd-xcf-unpremultiplied refe
 # other plug-ins
 TestCharcoal # openfx-arena Charcoal 2.x/3.0, ImageMagick 7, NatronGitHub/Natron#1630
 TestEqualize # failed with 2.5.0 on every platform too, NatronGitHub/Natron#1630
+GNUVolador # failed with every 2.5.0 build that ran it (the Linux run stopped before it), NatronGitHub/Natron#1631
 TestSeExpr # the noise pattern differs slightly, NatronGitHub/Natron#1630
 TestPolar # small resampling or precision difference, NatronGitHub/Natron#1630
 TestCMD/1 # PNG with alpha to JPEG: 2.6 writes premultiplied (by design, NatronGitHub/Natron#582), the 2.5 reference looks like the old bug; pending the maintainer's decision, NatronGitHub/Natron#1630

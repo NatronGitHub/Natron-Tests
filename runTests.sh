@@ -403,6 +403,25 @@ if [ "$1" = "clean" ]; then
     exit 0
 fi
 
+# Known failures (see known_failures/README.md): the tests listed in known_failures/common.txt and
+# in the platform's list (macos.txt, linux.txt, windows.txt) are reported as "KNOWN FAIL" when they
+# fail, and as "UNEXPECTED PASS" when they pass (the list must then be updated). They are read
+# before the tests run, so that a missing list stops the run at once; the results are rewritten
+# at the end.
+case "$PKGOS" in
+    OSX) kf_platform=macos ;;
+    Linux) kf_platform=linux ;;
+    Windows) kf_platform=windows ;;
+esac
+known=" "
+for f in "$ROOTDIR/known_failures/common.txt" "$ROOTDIR/known_failures/$kf_platform.txt"; do
+    if [ ! -f "$f" ]; then
+        echo "Error: known failures file $f not found"
+        exit 1
+    fi
+    known="$known$(sed -e 's/#.*//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$f" | grep -v '^$' | tr '\n' ' ' || true)"
+done
+
 export FAILED_DIR="$ROOTDIR"/failed
 export RESULTS="$ROOTDIR"/result.txt
 echo > "$RESULTS"
@@ -625,22 +644,6 @@ for x in $CUSTOM_DIRS; do
     popd # "$x"
 done
 
-# Known failures (see known_failures/README.md): the tests listed in known_failures/common.txt and
-# in the platform's list (macos.txt, linux.txt, windows.txt) are reported as "KNOWN FAIL" when they
-# fail, and as "UNEXPECTED PASS" when they pass (the list must then be updated).
-case "$PKGOS" in
-    OSX) kf_platform=macos ;;
-    Linux) kf_platform=linux ;;
-    Windows) kf_platform=windows ;;
-esac
-known=" "
-for f in "$ROOTDIR/known_failures/common.txt" "$ROOTDIR/known_failures/$kf_platform.txt"; do
-    if [ ! -f "$f" ]; then
-        echo "Error: known failures file $f not found"
-        exit 1
-    fi
-    known="$known$(sed -e 's/#.*//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$f" | grep -v '^$' | tr '\n' ' ' || true)"
-done
 npass=0; nfail=0; nknown=0; nunexpected=0
 failed_tests=""; unexpected_tests=""; seen=" "
 : > "$RESULTS.tmp"
@@ -696,3 +699,9 @@ if [ "$nfail" -gt 0 ]; then
     exit 1
 fi
 exit 0
+
+# Local Variables:
+# indent-tabs-mode: nil
+# sh-basic-offset: 4
+# sh-indentation: 4
+# End:

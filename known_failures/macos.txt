@@ -1,4 +1,2 @@
 # Known failures on macOS only (see README.md). Keep this list short: most known failures
 # should be in common.txt.
-
-GNUVolador # also failed with 2.5.0 on macOS and Windows, passed on Linux, NatronGitHub/Natron#1631
