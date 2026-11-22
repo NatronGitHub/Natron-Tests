@@ -56,6 +56,19 @@ if [ "$(uname -s)" = "Darwin" ]; then
 else
     TIMEOUT="timeout"
 fi
+# seq: GNU coreutils' gseq, or macOS's own /usr/bin/seq (same output for "seq FIRST LAST")
+if [ "$(uname -s)" = "Darwin" ] && command -v gseq > /dev/null 2>&1; then
+    SEQ_BIN=gseq
+else
+    SEQ_BIN=seq
+fi
+# without them, no frame is compared or every render is killed: fail now
+for tool in "$TIMEOUT" "$SEQ_BIN"; do
+    if ! command -v "$tool" > /dev/null 2>&1; then
+        echo "Error: $tool not found (on macOS: sudo port install coreutils, or brew install coreutils)"
+        exit 1
+    fi
+done
 
 if [ "${COMPARE:-}" != "" ]; then
     IDIFF_BIN="$COMPARE"
@@ -402,6 +415,14 @@ if [ -d "$FAILED_DIR" ]; then
 fi
 mkdir -p "$FAILED_DIR"
 
+# A private, empty disk cache (Natron 2.6 and later read NATRON_DISK_CACHE_PATH): the user's cache
+# holds the images and the OFX plug-in cache of other builds of the same version, which could be
+# used instead of rendering. Set NATRON_DISK_CACHE_PATH to use another one.
+if [ -z "${NATRON_DISK_CACHE_PATH:-}" ]; then
+    export NATRON_DISK_CACHE_PATH="$ROOTDIR/cache"
+    rm -rf "$NATRON_DISK_CACHE_PATH"
+fi
+
 TMP_SCRIPT="tmpScript.py"
 WRITER_PLUGINID="fr.inria.openfx.WriteOIIO"
 WRITER_NODE_NAME="__script_write_node__"
@@ -513,11 +534,7 @@ for t in $TEST_DIRS; do
 
         #compare with idiff
 
-        if [ "$uname" = "Darwin" ]; then
-            SEQ="gseq $FIRST_FRAME $LAST_FRAME"
-	else
-            SEQ="seq $FIRST_FRAME $LAST_FRAME"
-        fi
+        SEQ="$SEQ_BIN $FIRST_FRAME $LAST_FRAME"
 
         # Per-test idiff tolerance: a few tests differ from the stored references
         # only by sub-pixel anti-aliasing / plugin-version rendering changes that
@@ -531,7 +548,10 @@ for t in $TEST_DIRS; do
                 ;;
         esac
 
-        for i in $($SEQ); do
+        # a missing seq must fail the test, not skip the comparison
+        frames=$($SEQ) || { echo "Error: $SEQ failed"; exit 1; }
+        [ -n "$frames" ] || { echo "Error: no frame to compare in $t/$CONFFILE ($SEQ)"; failconf=1; }
+        for i in $frames; do
             # only copy images if this frame fails
             failframe=0
             if [ ! -f "output${i}.$IMAGES_FILE_EXT" ]; then
@@ -608,8 +628,82 @@ for x in $CUSTOM_DIRS; do
     popd # "$x"
 done
 
+# Known failures (see known_failures/README.md): the tests listed in known_failures/common.txt and
+# in the platform's list (macos.txt, linux.txt, windows.txt) are reported as "KNOWN FAIL" when they
+# fail, and as "UNEXPECTED PASS" when they pass (the list must then be updated). KNOWN_FAILURES
+# (a space-separated list of files) replaces the default lists.
+case "$PKGOS" in
+    OSX) kf_platform=macos ;;
+    Linux) kf_platform=linux ;;
+    Windows) kf_platform=windows ;;
+esac
+KNOWN_FAILURES=${KNOWN_FAILURES:-"$ROOTDIR/known_failures/common.txt $ROOTDIR/known_failures/$kf_platform.txt"}
+known=" "
+for f in $KNOWN_FAILURES; do
+    if [ ! -f "$f" ]; then
+        echo "Warning: known failures file $f not found"
+        continue
+    fi
+    known="$known$(sed -e 's/#.*//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$f" | grep -v '^$' | tr '\n' ' ' || true)"
+done
+npass=0; nfail=0; nknown=0; nunexpected=0
+failed_tests=""; unexpected_tests=""; seen=" "
+: > "$RESULTS.tmp"
+while IFS= read -r line; do
+    case "$line" in
+        *" : PASS") t=${line% : PASS}; st=PASS ;;
+        *" : FAIL") t=${line% : FAIL}; st=FAIL ;;
+        *) echo "$line" >> "$RESULTS.tmp"; continue ;;
+    esac
+    seen="$seen$t "
+    case "$known" in
+        *" $t "*) is_known=1 ;;
+        *) is_known=0 ;;
+    esac
+    if [ "$st" = PASS ] && [ "$is_known" = 1 ]; then
+        echo "$t : UNEXPECTED PASS" >> "$RESULTS.tmp"; nunexpected=$((nunexpected + 1)); unexpected_tests="$unexpected_tests $t"
+    elif [ "$st" = PASS ]; then
+        echo "$t : PASS" >> "$RESULTS.tmp"; npass=$((npass + 1))
+    elif [ "$is_known" = 1 ]; then
+        echo "$t : KNOWN FAIL" >> "$RESULTS.tmp"; nknown=$((nknown + 1))
+    else
+        echo "$t : FAIL" >> "$RESULTS.tmp"; nfail=$((nfail + 1)); failed_tests="$failed_tests $t"
+    fi
+done < "$RESULTS"
+mv "$RESULTS.tmp" "$RESULTS"
+# known failures that did not run (only meaningful when all the tests ran)
+notrun=""
+if [ -z "${TEST:-}${TESTCUSTOM:-}" ]; then
+    for t in $known; do
+        case "$seen" in *" $t "*) ;; *) notrun="$notrun $t" ;; esac
+    done
+fi
+
 echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** RESULTS:"
 cat "$RESULTS"
+{
+    echo "PASS: $npass"
+    echo "FAIL: $nfail${failed_tests:+ ($failed_tests )}"
+    echo "KNOWN FAIL: $nknown"
+    echo "UNEXPECTED PASS: $nunexpected${unexpected_tests:+ ($unexpected_tests ) -- remove them from known_failures/}"
+    if [ -n "$notrun" ]; then echo "KNOWN FAILURES NOT RUN:$notrun -- remove them from known_failures/ if they no longer exist"; fi
+} > "$ROOTDIR/summary.txt"
+echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** SUMMARY (known failures: $KNOWN_FAILURES):"
+cat "$ROOTDIR/summary.txt"
+if [ "$nunexpected" -gt 0 ]; then
+    echo "WARNING: $nunexpected known failures passed:$unexpected_tests. Update known_failures/."
+fi
+
+# Exit status: 1 if a test failed that is not a known failure. An unexpected pass is reported but
+# doesn't fail the run (it means a fix, which other platforms' lists may not reflect yet), unless
+# KNOWN_FAILURES_STRICT=1, which makes it exit 3.
+if [ "$nfail" -gt 0 ]; then
+    exit 1
+fi
+if [ "$nunexpected" -gt 0 ] && [ "${KNOWN_FAILURES_STRICT:-0}" = 1 ]; then
+    exit 3
+fi
+exit 0
 
 # Local Variables:
 # indent-tabs-mode: nil

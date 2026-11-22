@@ -232,3 +232,6 @@ tmpScript.py
 TestCMD/res1
 
 TestCMD/res2
+!known_failures/*.txt
+/cache/
+/failed/

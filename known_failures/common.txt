@@ -1,0 +1,30 @@
+# Known failures on every platform (see README.md): one test name per line, as in result.txt,
+# with the reason and the NatronGitHub/Natron issue.
+TestWriteFFmpeg/avi_3IVD # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/avi_cvid # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/avi_jpeg # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/avi_MP42 # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/avi_mp4v # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/avi_png # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_ap4h # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_apch # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_apcn # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_apco # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_apcs # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_AVrp # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_cvid # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_jpeg # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_mjp2 # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_mp4v # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_png # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_rle # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_SVQ1 # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_tga # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mov_tiff # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mp4_jpeg # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mp4_m2v1 # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mp4_mjp2 # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mp4_mp4v # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestWriteFFmpeg/mp4_png # references written as JPEG by FFmpeg 3.2: compare via 16-bit PNG, NatronGitHub/Natron#1600
+TestCMD/1 # premultiplied PNG-with-alpha to JPEG: the 2.5 reference has a bright rim, see the common issue
+TestCMD/2 # same as TestCMD/1
