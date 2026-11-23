@@ -38,8 +38,9 @@ PNG_OPTS=("-sws_flags" "+accurate_rnd+bitexact" "-pix_fmt" "rgb48be" "-pred" "mi
 # paths (worst frame of 9), so that the references, made on macOS arm64, should also hold on x86_64:
 # - "lossless": RGB codecs, exact (any difference of 1/65535 fails). The frames are rendered by
 #   Natron (Transform, OCIO) before they are encoded: if another platform's render differs by
-#   isolated 8-bit steps, allow them (-fail 0.0021 -failpercent 0.1 -hardfail 0.008) rather than
-#   list a known failure.
+#   1-2 8-bit steps in isolated pixels, allow them (-fail 0.0021 -failpercent 0.1 -hardfail 0.008)
+#   rather than list a known failure. If nearly every pixel differs by about 0.004, the rgb24 to
+#   rgb48be expansion differs: decode this group with -pix_fmt rgb24 instead.
 # - "identical here": no difference between C and NEON; allow 1-2 8-bit steps (the RGB-YUV conversion
 #   or a vector quantiser may round differently on another CPU), but no big error: the FFmpeg
 #   10-bit IDCT bug on arm64 (black 1-pixel columns in mov_AVdn, NatronGitHub/Natron#1601) fails.
