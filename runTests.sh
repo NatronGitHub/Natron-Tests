@@ -403,23 +403,35 @@ if [ "$1" = "clean" ]; then
     exit 0
 fi
 
-# Known failures (see known_failures/README.md): the tests listed in known_failures/common.txt and
-# in the platform's list (macos.txt, linux.txt, windows.txt) are reported as "KNOWN FAIL" when they
-# fail, and as "UNEXPECTED PASS" when they pass (the list must then be updated). They are read
-# before the tests run, so that a missing list stops the run at once; the results are rewritten
-# at the end.
+# Known failures (see known_failures/README.md): the tests listed in known_failures/common.txt, in
+# the platform's list (macos.txt, linux.txt, windows.txt) and in the CPU architecture's list
+# (arm64.txt, x86_64.txt) are reported as "KNOWN FAIL" when they fail, and as "UNEXPECTED PASS"
+# when they pass (the list must then be updated). They are read before the tests run, so that a
+# missing list stops the run at once; the results are rewritten at the end.
 case "$PKGOS" in
     OSX) kf_platform=macos ;;
     Linux) kf_platform=linux ;;
     Windows) kf_platform=windows ;;
 esac
+# The architecture of the Natron under test. MSYS2's own tools run as x86_64 on Windows ARM64, so
+# take it from MSYSTEM_CARCH there (aarch64 in CLANGARM64). Set KNOWN_FAILURES_ARCH when the shell
+# doesn't run as the tested binaries do (an x86_64 Natron under Rosetta, for example).
+kf_machine="${KNOWN_FAILURES_ARCH:-${MSYSTEM_CARCH:-$(uname -m)}}"
+case "$kf_machine" in
+    arm64|aarch64) kf_arch=arm64 ;;
+    x86_64|amd64) kf_arch=x86_64 ;;
+    *)
+        echo "Error: no known failures list for the architecture $kf_machine (set KNOWN_FAILURES_ARCH to arm64 or x86_64)"
+        exit 1
+        ;;
+esac
 known=" "
-for f in "$ROOTDIR/known_failures/common.txt" "$ROOTDIR/known_failures/$kf_platform.txt"; do
+for f in "$ROOTDIR/known_failures/common.txt" "$ROOTDIR/known_failures/$kf_platform.txt" "$ROOTDIR/known_failures/$kf_arch.txt"; do
     if [ ! -f "$f" ]; then
         echo "Error: known failures file $f not found"
         exit 1
     fi
-    known="$known$(sed -e 's/#.*//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$f" | grep -v '^$' | tr '\n' ' ' || true)"
+    known="$known $(sed -e 's/#.*//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$f" | grep -v '^$' | tr '\n' ' ' || true)"
 done
 
 export FAILED_DIR="$ROOTDIR"/failed
@@ -686,7 +698,7 @@ cat "$RESULTS"
     echo "UNEXPECTED PASS: $nunexpected${unexpected_tests:+ ($unexpected_tests ) -- remove them from known_failures/}"
     if [ -n "$notrun" ]; then echo "KNOWN FAILURES NOT RUN:$notrun -- remove them from known_failures/ if they no longer exist"; fi
 } > "$ROOTDIR/summary.txt"
-echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** SUMMARY (known failures: known_failures/common.txt and $kf_platform.txt):"
+echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** SUMMARY (known failures: known_failures/common.txt, $kf_platform.txt and $kf_arch.txt):"
 cat "$ROOTDIR/summary.txt"
 if [ "$nunexpected" -gt 0 ]; then
     echo "WARNING: $nunexpected known failures passed:$unexpected_tests. Update known_failures/."

@@ -5,9 +5,14 @@ as `KNOWN FAIL` instead of `FAIL`, and exits with status 1 only if another test 
 
 - `common.txt`: known failures on every platform. Known failures should differ very little, or not
   at all, between the platforms, so this is where most of them go.
-- `macos.txt`, `linux.txt`, `windows.txt`: the known failures of one platform only. `runTests.sh`
-  reads `common.txt` and the list of the platform it runs on (`uname`), and stops if one of them
-  is missing.
+- `macos.txt`, `linux.txt`, `windows.txt`: the known failures of one platform only.
+- `arm64.txt`, `x86_64.txt`: the known failures of one CPU architecture only, on every platform.
+
+`runTests.sh` reads `common.txt`, the list of the platform it runs on (`uname -s`) and the list of
+its architecture (`uname -m`; on MSYS2, `MSYSTEM_CARCH`), and stops if one of them is missing. Set
+`KNOWN_FAILURES_ARCH` (`arm64` or `x86_64`) if the shell's architecture isn't the one of the tested
+Natron, for example an x86_64 Natron under Rosetta. A test goes into a platform or architecture list
+only when a run shows that it passes elsewhere.
 
 Format: one test name per line, as written in `result.txt` (`TestBlur`, `TestCMD/1`,
 `TestWriteFFmpeg/mov_cvid`), optionally followed by a comment: `# reason, issue #N` (the issue is
