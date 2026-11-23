@@ -4,33 +4,7 @@
 # Not listed, on purpose: TestWriteFFmpeg/mov_AVdn (regression test of NatronGitHub/Natron#1601)
 # and TestMultiPlanePSD/TestMultiPlaneXCF (missing layers, NatronGitHub/Natron#1632).
 
-# FFmpeg (NatronGitHub/Natron#1600: PNG outputs and references)
-TestWriteFFmpeg/avi_3IVD # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/avi_cvid # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/avi_jpeg # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/avi_MP42 # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/avi_mp4v # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/avi_png # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_ap4h # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_apch # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_apcn # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_apco # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_apcs # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_AVrp # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_cvid # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_jpeg # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_mjp2 # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_mp4v # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_png # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_rle # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_SVQ1 # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_tga # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mov_tiff # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mp4_jpeg # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mp4_m2v1 # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mp4_mjp2 # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mp4_mp4v # compare via 16-bit PNG, NatronGitHub/Natron#1600
-TestWriteFFmpeg/mp4_png # compare via 16-bit PNG, NatronGitHub/Natron#1600
+# FFmpeg decoders (NatronGitHub/Natron#1600; TestWriteFFmpeg compares 16-bit PNGs since then)
 TestReadAVI_flv1 # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
 TestReadAVI_mp4v # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
 TestReadMOV_flv1 # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
