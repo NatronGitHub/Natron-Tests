@@ -26,9 +26,9 @@ RENDERER_BIN="$1"
 FFMPEG_BIN="$2"
 IDIFF_BIN="$3"
 # Each output is decoded by ffmpeg to 16-bit RGB PNG (rgb48be; alpha is not compared) and compared
-# with references decoded the same way (NatronGitHub/Natron#1600). The decode flags make the
-# decoders and swscale bit-exact: the C and NEON code paths of FFmpeg 9 give identical PNGs, so the
-# decode step adds no noise. -pred mixed only makes the PNGs smaller.
+# with references decoded the same way (NatronGitHub/Natron#1600). The decode flags are FFmpeg's
+# bit-exact ones (as in its FATE tests): on arm64, the C and NEON code paths of FFmpeg 9 give
+# identical PNGs (not yet measured on x86_64). -pred mixed only makes the PNGs smaller.
 DECODE_OPTS=("-flags:v" "+bitexact" "-idct" "simple")
 PNG_OPTS=("-sws_flags" "+accurate_rnd+bitexact" "-pix_fmt" "rgb48be" "-pred" "mixed")
 # The encoders are not all bit-exact across CPUs: with the FFmpeg 9 C code instead of NEON
@@ -36,17 +36,23 @@ PNG_OPTS=("-sws_flags" "+accurate_rnd+bitexact" "-pix_fmt" "rgb48be" "-pred" "mi
 # MPEG-4, MS-MPEG4) write different streams; every other format gives identical streams. The
 # tolerances below allow at least three times the differences measured between those two code
 # paths (worst frame of 9), so that the references, made on macOS arm64, should also hold on x86_64:
-# - "lossless": RGB codecs, exact (any difference of 1/65535 fails).
-# - "exact here": no difference between C and NEON; allow 1-2 8-bit steps (the RGB-YUV conversion
+# - "lossless": RGB codecs, exact (any difference of 1/65535 fails). The frames are rendered by
+#   Natron (Transform, OCIO) before they are encoded: if another platform's render differs by
+#   isolated 8-bit steps, allow them (-fail 0.0021 -failpercent 0.1 -hardfail 0.008) rather than
+#   list a known failure.
+# - "identical here": no difference between C and NEON; allow 1-2 8-bit steps (the RGB-YUV conversion
 #   or a vector quantiser may round differently on another CPU), but no big error: the FFmpeg
 #   10-bit IDCT bug on arm64 (black 1-pixel columns in mov_AVdn, NatronGitHub/Natron#1601) fails.
-# - MJPEG, MPEG-2, MPEG-4 (C vs NEON: at most 0.8% of values over 0.008, 0.32% over 0.016,
+# - MJPEG, MPEG-2, MPEG-4 (C vs NEON: at most 0.8% of pixels over 0.008, 0.32% over 0.016,
 #   max 0.063).
-# - MS-MPEG4 v2/v3 (C vs NEON: 5.3% of values over 0.016, 2.5% over 0.032, max 0.43: a different
+# - MS-MPEG4 v2/v3 (C vs NEON: 5.3% of pixels over 0.016, 2.5% over 0.032, max 0.43: a different
 #   macroblock decision changes the following P-frames).
 # The references must be made with the same FFmpeg major version as the tests (FFmpeg 9 in
-# Natron 2.6): the encoders and swscale change between versions. To regenerate them, run the test,
-# then in each formats/<name>/ directory: for i in output[0-9]*.png; do cp "$i" "reference${i#output}"; done
+# Natron 2.6; MSYS2's rolling ffmpeg on Windows may move ahead): the encoders and swscale change
+# between versions. Never regenerate them with an FFmpeg that lacks the 10-bit IDCT fix of
+# NatronGitHub/Natron#1601 (MacPorts ffmpeg 9.0.2_5 has it): mov_AVdn would then record the bug.
+# To regenerate them, run the test, then in each formats/<name>/ directory:
+#   for i in output[0-9]*.png; do cp "$i" "reference${i#output}"; done
 idiff_opts() {
     case "$1" in
         avi_png|mov_png|mp4_png|mov_rle|mov_tga)
@@ -98,7 +104,11 @@ for x in $FORMATS/*; do
   fi
   fmtname="$(basename "$x")"
   f="${NAME}/${fmtname}"
-  IDIFF_OPTS=($(idiff_opts "$fmtname") "-abs" "-scale" "100")
+  if ! opts="$(idiff_opts "$fmtname")"; then
+      echo "$f : FAIL" >> "$RESULTS"
+      continue
+  fi
+  IDIFF_OPTS=($opts "-abs" "-scale" "100")
   pushd "$x"
   echo "$(date '+%Y-%m-%d %H:%M:%S') *** START $f"
   FORMAT="$(cat format)"
@@ -132,8 +142,8 @@ for x in $FORMATS/*; do
     SEQ="jot - $FIRST_FRAME $LAST_FRAME"
   fi
   for i in $($SEQ); do
-      # idiff's exit status: 0 = same, 1 = warning (a difference within the tolerance), 2 = failure,
-      # higher = error (e.g. a missing reference or a size mismatch)
+      # idiff's exit status: 0 = pass, 1 = warning, 2 = failure (also a size mismatch),
+      # higher = error (e.g. a missing reference)
       status=0
       "$IDIFF_BIN" "reference${i}.$IMAGES_FILE_EXT" "output${i}.$IMAGES_FILE_EXT" -o "comp${i}.$IMAGES_FILE_EXT" "${IDIFF_OPTS[@]}" &> res || status=$?
       if [ ! -f "output${i}.$IMAGES_FILE_EXT" ]; then
@@ -153,6 +163,10 @@ for x in $FORMATS/*; do
 	  TEST_PASS=$((TEST_PASS+1))
       fi
   done
+  if [ -f "output$((LAST_FRAME+1)).$IMAGES_FILE_EXT" ]; then
+      echo "WARNING: more than $LAST_FRAME frames in $x"
+      TEST_FAIL=$((TEST_FAIL+1))
+  fi
   if [ "$TEST_FAIL" = 0 ] && [ "$TEST_PASS" = "$LAST_FRAME" ]; then
       echo "$(date '+%Y-%m-%d %H:%M:%S') *** PASS $f"
       echo "$f : PASS" >> "$RESULTS"
