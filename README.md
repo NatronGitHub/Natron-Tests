@@ -7,9 +7,11 @@ The main-repository for Natron is [here](https://github.com/MrKepzie/Natron).
 
 To successfully run the tests you should have a fully-featured version of Natron (+bundled plug-ins) working as well as ImageMagick installed on your system with the *compare* command in your path.
 
+Known failures are listed in `known_failures/` (see its README.md): `runTests.sh` reports them as `KNOWN FAIL`, a listed test that passes as `UNEXPECTED PASS`, writes the counts to `summary.txt`, and exits with status 1 only when another test fails.
+
 To run the tests, simply run:
 
-    ./run-tests.sh <NATRON_RENDERER_BINARY_ABSOLUTE_FILE_PATH>
+    ./runTests.sh <NATRON_RENDERER_BINARY_ABSOLUTE_FILE_PATH>
 
 Make sure that Natron is using the version of the plug-ins that you expect (whether they are system-wide or bundled) and that it can have access to the OpenColorIO configuration files. (Should be located in ../Resources relative to the NatronRenderer binary)
 
@@ -44,7 +46,7 @@ A correct configuration file could be as such:
 
 You can submit new tests with a [pull-request](https://github.com/MrKepzie/Natron-Tests/pulls) containing the new test sub-directory. It will be accepted if it is respecting the points above.
 
-Finally in run-tests.sh add the directory name of your test to the TEST_DIRS variable.
+Finally in runTests.sh add the directory name of your test to the TEST_DIRS variable.
 
 
 Comparison

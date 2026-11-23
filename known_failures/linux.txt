@@ -1,0 +1,5 @@
+# Known failures on Linux only (see README.md). Keep this list short: most known failures
+# should be in common.txt.
+# To be checked by a Natron 2.6 run on Linux (Rocky 9) (NatronGitHub/Natron#1629).
+
+TestTile # runTests.sh never renders it on Linux (it used to crash there), NatronGitHub/Natron#1633

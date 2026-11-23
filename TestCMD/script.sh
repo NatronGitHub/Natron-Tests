@@ -47,7 +47,7 @@ if [ -n "${OFX_PLUGIN_PATH:-}" ]; then
     echo "OFX_PLUGIN_PATH=${OFX_PLUGIN_PATH:-}, setting useStdOFXPluginsLocation=False"
     OPTS=(${OPTS[@]+"${OPTS[@]}"} "--setting" "useStdOFXPluginsLocation=False")
 fi
-if [ "$uname" = "Msys" ]; then
+if [ "$uname" = "Msys" ] || [[ "$uname" == *_NT-* ]]; then
     plugin_path="${CWD};${NATRON_PLUGIN_PATH:-}"
 else
     plugin_path="${CWD}:${NATRON_PLUGIN_PATH:-}"
