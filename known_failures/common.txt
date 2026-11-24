@@ -17,9 +17,6 @@ TestReadMP4_mp4v # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check
 TestReadMPEG1 # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
 TestReadMXF # MPEG-family decode differs from 2.5 (arm64 or FFmpeg 9; check on x86_64, else macos.txt), NatronGitHub/Natron#1600
 
-# PSD and XCF readers (openfx-arena, ImageMagick 7)
-TestImagePSD # alpha / premultiplication; until the psd-xcf-unpremultiplied reference branch lands, NatronGitHub/Natron#1630
-TestImageXCF # alpha / premultiplication; until the psd-xcf-unpremultiplied reference branch lands, NatronGitHub/Natron#1630
 
 # other plug-ins
 TestCharcoal # openfx-arena Charcoal 2.x/3.0, ImageMagick 7, NatronGitHub/Natron#1630
