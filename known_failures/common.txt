@@ -1,8 +1,8 @@
 # Known failures on every platform (see README.md): one test name per line, as in result.txt,
 # with the reason and the NatronGitHub/Natron issue. Seen on macOS 14 and 27 (arm64, Natron 2.6),
 # with identical errors; to be confirmed on Linux and Windows (NatronGitHub/Natron#1629).
-# Not listed, on purpose: TestWriteFFmpeg/mov_AVdn (regression test of NatronGitHub/Natron#1601)
-# and TestMultiPlanePSD/TestMultiPlaneXCF (missing layers, NatronGitHub/Natron#1632).
+# Not listed, on purpose: TestWriteFFmpeg/mov_AVdn (regression test of NatronGitHub/Natron#1601).
+# TestMultiPlanePSD/TestMultiPlaneXCF pass again with openfx-arena >= 62f9f46 (NatronGitHub/Natron#1632, fixed).
 
 # FFmpeg (NatronGitHub/Natron#1600: PNG outputs and references)
 TestWriteFFmpeg/avi_3IVD # compare via 16-bit PNG, NatronGitHub/Natron#1600
