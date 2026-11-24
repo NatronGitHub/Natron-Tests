@@ -52,6 +52,8 @@ PNG_OPTS=("-sws_flags" "+accurate_rnd+bitexact" "-pix_fmt" "rgb48be" "-pred" "mi
 # Natron 2.6; MSYS2's rolling ffmpeg on Windows may move ahead): the encoders and swscale change
 # between versions. Never regenerate them with an FFmpeg that lacks the 10-bit IDCT fix of
 # NatronGitHub/Natron#1601 (MacPorts ffmpeg 9.0.2_5 has it): mov_AVdn would then record the bug.
+# The current references were made on macOS arm64 with openfx-io 9d32605 (after openfx-io#323,
+# which changed the writer's conversions) and MacPorts ffmpeg 9.0.2_5.
 # To regenerate them, run the test, then in each formats/<name>/ directory:
 #   for i in output[0-9]*.png; do cp "$i" "reference${i#output}"; done
 idiff_opts() {
