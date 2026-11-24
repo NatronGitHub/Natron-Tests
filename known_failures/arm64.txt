@@ -1,4 +1,4 @@
 # Known failures on arm64 only (macOS arm64, Linux aarch64, Windows ARM64; see README.md). Keep this
 # list short: most known failures should be in common.txt. Each of these passes on x86_64.
 
-TestSeExpr # cellnoise/voronoi of negative cells: SeExpr casts a negative double to uint32_t (wraps on x86_64, saturates on arm64), NatronGitHub/Natron#1671
+TestSeExpr # cellnoise/voronoi of negative cells: SeExpr casts a negative double to uint32_t (wraps on x86_64, saturates on arm64); until the SDKs and openfx-io are rebuilt with NatronGitHub/Natron#1676's SeExpr patch, NatronGitHub/Natron#1671
