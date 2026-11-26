@@ -689,6 +689,13 @@ if [ -z "${TEST:-}${TESTCUSTOM:-}" ]; then
     done
 fi
 
+# FAIL if a test failed that is not a known failure (a regression), or if a known failure passed (an
+# unexpected pass: the lists in known_failures/ must be updated); also the exit status
+result=PASS
+if [ "$nfail" -gt 0 ] || [ "$nunexpected" -gt 0 ]; then
+    result=FAIL
+fi
+
 echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** RESULTS:"
 cat "$RESULTS"
 {
@@ -697,20 +704,19 @@ cat "$RESULTS"
     echo "KNOWN FAIL: $nknown"
     echo "UNEXPECTED PASS: $nunexpected${unexpected_tests:+ ($unexpected_tests ) -- remove them from known_failures/}"
     if [ -n "$notrun" ]; then echo "KNOWN FAILURES NOT RUN:$notrun -- remove them from known_failures/ if they no longer exist"; fi
-    if [ "$nfail" -gt 0 ] || [ "$nunexpected" -gt 0 ]; then echo "RESULT: FAIL"; else echo "RESULT: PASS"; fi
+    echo "RESULT: $result"
 } > "$ROOTDIR/summary.txt"
 echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** SUMMARY (known failures: known_failures/common.txt, $kf_platform.txt and $kf_arch.txt):"
 cat "$ROOTDIR/summary.txt"
 if [ "$nfail" -gt 0 ]; then
-    echo "ERROR: $nfail tests failed that are not known failures:$failed_tests"
+    echo "ERROR: tests that failed and are not known failures ($nfail):$failed_tests"
 fi
 if [ "$nunexpected" -gt 0 ]; then
-    echo "ERROR: $nunexpected known failures passed (UNEXPECTED PASS):$unexpected_tests. Remove them from known_failures/ (or move them to the list of the platforms where they still fail) and update their issues."
+    echo "ERROR: known failures that passed (UNEXPECTED PASS, $nunexpected):$unexpected_tests. Remove them from known_failures/ (or move them to the list of the platforms where they still fail) and update their issues."
 fi
 
-# Exit status: 1 if a test failed that is not a known failure (a regression), or if a known failure
-# passed (an unexpected pass: the lists in known_failures/ must be updated), as RESULT in summary.txt.
-if [ "$nfail" -gt 0 ] || [ "$nunexpected" -gt 0 ]; then
+# Exit status: 1 if RESULT is FAIL
+if [ "$result" = FAIL ]; then
     exit 1
 fi
 exit 0
