@@ -28,7 +28,7 @@ Source
 2
 True
 True
-Size (diameter) of the filter kernel, in pixel units (>=0). The standard deviation of the corresponding Gaussian is size/2.4. No blur is applied if size < 0.24 (Gaussian and quasi-Gaussian) or <= 1 (box, triangle and quadratic).
+Size (diameter) of the filter kernel, in pixel units (>=0). The standard deviation of the corresponding Gaussian is size/2.4 (size/2.3548 for the FIR Gaussian, whose full width at half maximum is the size). No blur is applied if size < 0.24 (Gaussian and quasi-Gaussian), < 2/3 (FIR Gaussian) or <= 1 (box, triangle and quadratic).
 True
 True
 True
