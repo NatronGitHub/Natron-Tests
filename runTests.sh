@@ -712,7 +712,7 @@ if [ "$nfail" -gt 0 ]; then
     echo "ERROR: tests that failed and are not known failures ($nfail):$failed_tests"
 fi
 if [ "$nunexpected" -gt 0 ]; then
-    echo "ERROR: known failures that passed (UNEXPECTED PASS, $nunexpected):$unexpected_tests. Remove them from known_failures/ (or move them to the list of the platforms where they still fail) and update their issues."
+    echo "ERROR: known failures that passed (UNEXPECTED PASS, $nunexpected):$unexpected_tests. Remove them from known_failures/ (or move them to the lists of the platforms or architectures where they still fail) and update their issues."
 fi
 
 # Exit status: 1 if RESULT is FAIL
