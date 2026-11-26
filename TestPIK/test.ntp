@@ -5591,7 +5591,7 @@
 			<Plugin_label>PIKColor</Plugin_label>
 			<Plugin_script_name>PIKColor</Plugin_script_name>
 			<Plugin_id>fr.inria.PIKColor</Plugin_id>
-			<PythonModule>/Applications/Natron.app/Contents/Plugins/PyPlugs/PIKColor.py</PythonModule>
+			<PythonModule>PIKColor.py</PythonModule>
 			<PythonModuleVersion>1</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>
