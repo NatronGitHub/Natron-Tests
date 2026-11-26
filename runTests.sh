@@ -406,8 +406,8 @@ fi
 # Known failures (see known_failures/README.md): the tests listed in known_failures/common.txt, in
 # the platform's list (macos.txt, linux.txt, windows.txt) and in the CPU architecture's list
 # (arm64.txt, x86_64.txt) are reported as "KNOWN FAIL" when they fail, and as "UNEXPECTED PASS"
-# when they pass (the list must then be updated). They are read before the tests run, so that a
-# missing list stops the run at once; the results are rewritten at the end.
+# when they pass, which fails the run (the list must then be updated). They are read before the
+# tests run, so that a missing list stops the run at once; the results are rewritten at the end.
 case "$PKGOS" in
     OSX) kf_platform=macos ;;
     Linux) kf_platform=linux ;;
@@ -697,17 +697,20 @@ cat "$RESULTS"
     echo "KNOWN FAIL: $nknown"
     echo "UNEXPECTED PASS: $nunexpected${unexpected_tests:+ ($unexpected_tests ) -- remove them from known_failures/}"
     if [ -n "$notrun" ]; then echo "KNOWN FAILURES NOT RUN:$notrun -- remove them from known_failures/ if they no longer exist"; fi
+    if [ "$nfail" -gt 0 ] || [ "$nunexpected" -gt 0 ]; then echo "RESULT: FAIL"; else echo "RESULT: PASS"; fi
 } > "$ROOTDIR/summary.txt"
 echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** SUMMARY (known failures: known_failures/common.txt, $kf_platform.txt and $kf_arch.txt):"
 cat "$ROOTDIR/summary.txt"
+if [ "$nfail" -gt 0 ]; then
+    echo "ERROR: $nfail tests failed that are not known failures:$failed_tests"
+fi
 if [ "$nunexpected" -gt 0 ]; then
-    echo "WARNING: $nunexpected known failures passed:$unexpected_tests. Update known_failures/."
+    echo "ERROR: $nunexpected known failures passed (UNEXPECTED PASS):$unexpected_tests. Remove them from known_failures/ (or move them to the list of the platforms where they still fail) and update their issues."
 fi
 
-# Exit status: 1 if a test failed that is not a known failure. An unexpected pass is reported
-# (result.txt, summary.txt and the WARNING above) but doesn't fail the run: it means a fix, and the
-# run of another branch or platform must not fail because a list wasn't updated yet.
-if [ "$nfail" -gt 0 ]; then
+# Exit status: 1 if a test failed that is not a known failure (a regression), or if a known failure
+# passed (an unexpected pass: the lists in known_failures/ must be updated), as RESULT in summary.txt.
+if [ "$nfail" -gt 0 ] || [ "$nunexpected" -gt 0 ]; then
     exit 1
 fi
 exit 0
