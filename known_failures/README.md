@@ -1,7 +1,8 @@
 # Known failures
 
 Tests that are expected to fail, so that a run of `runTests.sh` can gate a release: it reports them
-as `KNOWN FAIL` instead of `FAIL`, and exits with status 1 only if another test fails.
+as `KNOWN FAIL` instead of `FAIL`, and exits with status 1 only if a test that isn't listed fails, or
+if a listed test passes (see below).
 
 - `common.txt`: known failures on every platform. Known failures should differ very little, or not
   at all, between the platforms, so this is where most of them go.
@@ -16,11 +17,14 @@ only when a run shows that it passes elsewhere.
 
 Format: one test name per line, as written in `result.txt` (`TestBlur`, `TestCMD/1`,
 `TestWriteFFmpeg/mov_cvid`), optionally followed by a comment: `# reason, issue #N` (the issue is
-in NatronGitHub/Natron). Blank lines and lines starting with `#` are ignored. Every entry should
-have an issue.
+in NatronGitHub/Natron). Blank lines and lines starting with `#` are ignored.
 
 A listed test that passes is reported as `UNEXPECTED PASS`, in `result.txt`, in `summary.txt` and
-at the end of the output: remove it from the list (and update its issue). It doesn't fail the run,
-because it means that something was fixed, and the run of another platform, or a build of an older
-branch, should not fail because the list wasn't updated yet. A listed test that didn't run at all
-(when all the tests run) is reported as `KNOWN FAILURES NOT RUN`.
+at the end of the output, and **fails the run** (exit status 1, `RESULT: FAIL` in `summary.txt`),
+like a test that fails and isn't listed: the lists no longer describe the build. Remove the test
+from the list, or move it to the lists of the platforms or architectures where it still fails, and
+update its issue. A listed test that didn't run at all (when all the tests run) is reported as
+`KNOWN FAILURES NOT RUN`; that doesn't fail the run.
+
+Every entry cites an open NatronGitHub/Natron issue: when its issue is closed, either the test
+passes again (remove the entry) or the entry needs another open issue.

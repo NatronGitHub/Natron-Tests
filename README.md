@@ -7,7 +7,7 @@ The main-repository for Natron is [here](https://github.com/MrKepzie/Natron).
 
 To successfully run the tests you should have a fully-featured version of Natron (+bundled plug-ins) working as well as ImageMagick installed on your system with the *compare* command in your path.
 
-Known failures are listed in `known_failures/` (see its README.md): `runTests.sh` reports them as `KNOWN FAIL`, a listed test that passes as `UNEXPECTED PASS`, writes the counts to `summary.txt`, and exits with status 1 only when another test fails.
+Known failures are listed in `known_failures/` (see its README.md): `runTests.sh` reports them as `KNOWN FAIL`, a listed test that passes as `UNEXPECTED PASS`, writes the counts and `RESULT: PASS` or `RESULT: FAIL` to `summary.txt`, and exits with status 1 when a test that isn't listed fails or a listed test passes.
 
 To run the tests, simply run:
 
