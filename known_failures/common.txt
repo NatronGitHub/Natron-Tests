@@ -6,7 +6,6 @@
 # Never list TestWriteFFmpeg/mov_AVdn: it is the regression test of NatronGitHub/Natron#1601.
 # TestMultiPlanePSD/TestMultiPlaneXCF pass again with openfx-arena >= 62f9f46 (NatronGitHub/Natron#1632, fixed).
 
-# other plug-ins
 TestCharcoal # openfx-arena Charcoal 2.x/3.0, ImageMagick 7, NatronGitHub/Natron#1630
 TestEqualize # failed with 2.5.0 on every platform too, NatronGitHub/Natron#1630
 GNUVolador # failed with every 2.5.0 build that ran it (the Linux run stopped before it), NatronGitHub/Natron#1631

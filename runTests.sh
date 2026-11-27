@@ -579,8 +579,22 @@ for t in $TEST_DIRS; do
         # rather than failing the whole run. Every other test keeps the strict
         # global IDIFF_OPTS.
         TEST_IDIFF_OPTS=("${IDIFF_OPTS[@]}")
-        # The FFmpeg reader tests (TestRead*) keep it too: see "FFmpeg reader tests" in README.md.
+        # FFmpeg reader tests (TestRead*, 16-bit PNG; numbers in "FFmpeg reader tests" in README.md):
+        # - codecs that decode to the same pixels on x86_64 and arm64 (PNG, QuickTime RLE, H.264,
+        #   SVQ1, ProRes: at most 1/65535): exact up to 1e-4, so that a 1-code bias, ProRes's 16-bit
+        #   white or a ProRes decode at 8 bits fails;
+        # - IDCT codecs (MJPEG, FLV1, MPEG-1/2/4 part 2), whose IDCT isn't bit-exact across CPUs (at
+        #   most 0.31% of the pixels over 1e-4, MPEG-1): 1% of the pixels may differ, none by 0.08.
         case "$t" in
+            TestReadAVI_png|TestReadMOV_png|TestReadMP4_png|TestReadMOV_rle|TestReadMOV_avc1|TestReadMP4_avc1|TestReadAVI_svq1|TestReadMOV_svq1|TestReadMOV_ap4h|TestReadMOV_apch|TestReadMOV_apcn|TestReadMOV_apco|TestReadMOV_apcs)
+                TEST_IDIFF_OPTS=("-warn" "0.0001" "-fail" "0.0001" "-failpercent" "0" "-abs" "-scale" "30")
+                ;;
+            TestReadAVI_flv1|TestReadMOV_flv1|TestReadAVI_jpg|TestReadMOV_jpg|TestReadMP4_jpg|TestReadAVI_mp4v|TestReadMOV_mp4v|TestReadMP4_mp4v|TestReadMOV_m1v|TestReadMP4_m1v|TestReadMPEG1|TestReadMOV_m2v1|TestReadMP4_m2v1|TestReadMXF)
+                TEST_IDIFF_OPTS=("-warn" "0.008" "-fail" "0.0001" "-failpercent" "1" "-hardfail" "0.08" "-abs" "-scale" "30")
+                ;;
+            TestRead*)
+                echo "Error: no tolerance for $t in $0"; failconf=1
+                ;;
             TestArc|TestText|TestTile)
                 TEST_IDIFF_OPTS=("-warn" "0.02" "-fail" "0.02" "-failpercent" "20" "-hardfail" "1.01" "-abs" "-scale" "30")
                 ;;

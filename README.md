@@ -53,11 +53,11 @@ Finally in runTests.sh add the directory name of your test to the TEST_DIRS vari
 FFmpeg reader tests
 -------------------
 
-The `TestRead*` tests read one frame of a movie with ReadFFmpeg and write it as a 16-bit PNG (`png 16i` in `conf`), compared with the global tolerance of `runTests.sh` (NatronGitHub/Natron#1600).
+The `TestRead*` tests read one frame of a movie with ReadFFmpeg and write it as a 16-bit PNG (`png 16i` in `conf`), compared with a per-codec tolerance (the `case` before the comparison in `runTests.sh`, NatronGitHub/Natron#1600): exact up to 1e-4 for the codecs that decode identically on every CPU, and up to 1% of the pixels, none over 0.08, for the IDCT codecs.
 
-- **References:** the Linux x86_64 outputs of the Natron Linux packages run 46003895608 (Natron RB-2.6, openfx-io 20907ce, after openfx-io#323's swscale changes, FFmpeg 9.0.2). The x86_64 builds of Linux, macOS and Windows decode these files to the same pixels, and the arm64 builds to the same pixels as each other.
-- **x86_64 against aarch64:** PNG, QuickTime RLE, H.264 and SVQ1 are identical; ProRes differs by at most 1/65535. The IDCT codecs (MJPEG, FLV1/H.263, MPEG-1, MPEG-2, MPEG-4 part 2), whose IDCT isn't bit-exact across CPUs, differ in at most 0.07% of the pixels over 0.008, with a max of 0.023 (MPEG-1), within `-failpercent 0.2` and `-hardfail 0.08`. On arm64, idiff prints a WARNING for them.
-- **Regenerating:** with an FFmpeg of the same major version, run the tests, then `for t in TestRead*; do cp $t/output1.png $t/reference1.png; done`, and check the new references against the old ones on another CPU architecture.
+- **References:** the Linux x86_64 outputs of the Natron Linux packages run 46003895608 (Natron RB-2.6, openfx-io 20907ce, after openfx-io#323's swscale changes, FFmpeg 9.0.2). Before this change, the 8-bit JPEG outputs of the 18 tests that failed then were byte-identical on Linux, macOS and Windows x86_64, and on Linux and macOS arm64.
+- **x86_64 against aarch64** (Linux, same run): PNG, QuickTime RLE, H.264 and SVQ1 are identical; ProRes differs by at most 1/65535. The IDCT codecs (MJPEG, FLV1/H.263, MPEG-1, MPEG-2, MPEG-4 part 2), whose IDCT isn't bit-exact across CPUs, differ in at most 0.31% of the pixels over 1e-4 (3.3 times under the 1% limit) and 0.07% over 0.008, with a max of 0.023 (MPEG-1). On arm64, idiff prints a WARNING for some of them.
+- **Regenerating:** with an FFmpeg of the same major version, run the tests on Linux x86_64, then `for t in TestRead*; do cp $t/output1.png $t/reference1.png; done`, and check the aarch64 outputs against the new references.
 
 Comparison
 -----------
