@@ -467,8 +467,8 @@ for t in $TEST_DIRS; do
 
     echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** ===================$t========================"
     ############################################
-    rm output[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
-    rm comp[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
+    # every extension: the conf, which gives this test's extension, isn't read yet
+    rm -f output[0-9]*.* comp[0-9]*.* &> /dev/null || true
     for CONFFILE in conf conf2 conf3 conf4 conf5; do
         failconf=0
     if [[ ! -f "$CONFFILE" ]]; then
@@ -528,7 +528,9 @@ for t in $TEST_DIRS; do
     if [ "$IMAGES_FILE_EXT" = "jpg" ]; then
         echo "writer.quality.set($QUALITY)"
     fi
-    # optional bit depth after the extension, e.g. "png 16i" (the WriteOIIO bitDepth option)
+    # optional bit depth after the extension, e.g. "png 16i" (the WriteOIIO bitDepth option); set
+    # after the filename, which already chose the output colorspace (sRGB for png): WriteOIIO
+    # would choose Rec.709 from a 16-bit integer depth, but only when the filename changes
     if [ -n "$BIT_DEPTH" ]; then
         echo "writer.bitDepth.set(\"$BIT_DEPTH\")"
         echo "if writer.bitDepth.getOption(writer.bitDepth.getValue()) != \"$BIT_DEPTH\":"
@@ -577,16 +579,7 @@ for t in $TEST_DIRS; do
         # rather than failing the whole run. Every other test keeps the strict
         # global IDIFF_OPTS.
         TEST_IDIFF_OPTS=("${IDIFF_OPTS[@]}")
-        # The FFmpeg reader tests (TestRead*) write 16-bit PNGs ("png 16i" in conf) and keep the
-        # global tolerance. Their references are the Linux x86_64 outputs of the Linux packages
-        # run 46003895608 (NatronGitHub/Natron#1600): Natron RB-2.6, openfx-io 20907ce (after
-        # openfx-io#323's swscale changes), FFmpeg 9.0.2. Every x86_64 platform gave the same
-        # pixels, and the arm64 ones the same pixels as each other (checked on the earlier JPEG
-        # outputs). x86_64 against aarch64: PNG, QuickTime RLE, H.264, SVQ1 identical; ProRes at
-        # most 1/65535; the IDCT codecs (MJPEG, FLV1/H.263, MPEG-1, MPEG-2, MPEG-4 part 2), whose
-        # IDCT isn't bit-exact across CPUs, at most 0.07% of the pixels over 0.008 and a max of
-        # 0.023 (MPEG-1), within -failpercent 0.2 and -hardfail 0.08. To regenerate them, with
-        # an FFmpeg of the same major version: for t in TestRead*; do cp $t/output1.png $t/reference1.png; done
+        # The FFmpeg reader tests (TestRead*) keep it too: see "FFmpeg reader tests" in README.md.
         case "$t" in
             TestArc|TestText|TestTile)
                 TEST_IDIFF_OPTS=("-warn" "0.02" "-fail" "0.02" "-failpercent" "20" "-hardfail" "1.01" "-abs" "-scale" "30")
