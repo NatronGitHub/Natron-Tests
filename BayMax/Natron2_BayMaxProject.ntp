@@ -13550,7 +13550,7 @@
 			<Plugin_label>LightWrap</Plugin_label>
 			<Plugin_script_name>LightWrap</Plugin_script_name>
 			<Plugin_id>fr.inria.LightWrap</Plugin_id>
-			<PythonModule>C:/Program Files/INRIA/Natron-snapshots/Plugins/PyPlugs/LightWrap.py</PythonModule>
+			<PythonModule>LightWrap.py</PythonModule>
 			<PythonModuleVersion>1</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>

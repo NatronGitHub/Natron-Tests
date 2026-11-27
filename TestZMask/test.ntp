@@ -642,7 +642,7 @@
 			<Plugin_label>ZMask1</Plugin_label>
 			<Plugin_script_name>ZMask1</Plugin_script_name>
 			<Plugin_id>fr.inria.ZMask</Plugin_id>
-			<PythonModule>/home/olear/Natron2/Plugins/PyPlugs/ZMask.py</PythonModule>
+			<PythonModule>ZMask.py</PythonModule>
 			<PythonModuleVersion>1</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>

@@ -845,7 +845,7 @@
 			<Plugin_label>AngleBlur1</Plugin_label>
 			<Plugin_script_name>AngleBlur1</Plugin_script_name>
 			<Plugin_id>fr.inria.AngleBlur</Plugin_id>
-			<PythonModule>/Applications/Natron 2.2.8.app/Contents/Plugins/PyPlugs/AngleBlur.py</PythonModule>
+			<PythonModule>AngleBlur.py</PythonModule>
 			<PythonModuleVersion>1</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>
