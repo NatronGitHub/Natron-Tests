@@ -6,28 +6,6 @@
 # Never list TestWriteFFmpeg/mov_AVdn: it is the regression test of NatronGitHub/Natron#1601.
 # TestMultiPlanePSD/TestMultiPlaneXCF pass again with openfx-arena >= 62f9f46 (NatronGitHub/Natron#1632, fixed).
 
-# FFmpeg decoders: MPEG-family decode (NatronGitHub/Natron#1889; the TestWriteFFmpeg references of NatronGitHub/Natron#1600 are 16-bit PNGs since NatronGitHub/Natron-Tests#4)
-TestReadAVI_flv1 # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadAVI_mp4v # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMOV_flv1 # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMOV_m1v # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMOV_m2v1 # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMOV_mp4v # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMP4_m1v # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMP4_m2v1 # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMP4_mp4v # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMPEG1 # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-TestReadMXF # MPEG-family decode differs from 2.5, on x86_64 too (larger on Linux: NatronGitHub/openfx-io#323), NatronGitHub/Natron#1889
-# Seen on Linux only so far: the macOS runs named above used an openfx-io older than NatronGitHub/openfx-io#323.
-# Their references are regenerated once the open openfx-io FFmpeg issues are resolved (NatronGitHub/Natron#1670).
-TestReadAVI_svq1 # 8-bit reads round to the nearest since NatronGitHub/openfx-io#323; the 2.5 reference has the old bias, NatronGitHub/Natron#1670
-TestReadMOV_ap4h # >8-bit reads are 0.39% brighter (exact white) since NatronGitHub/openfx-io#323; the 2.5 reference has the old white, NatronGitHub/Natron#1670
-TestReadMOV_apch # same as TestReadMOV_ap4h, NatronGitHub/Natron#1670
-TestReadMOV_apcn # same as TestReadMOV_ap4h, NatronGitHub/Natron#1670
-TestReadMOV_apco # same as TestReadMOV_ap4h, NatronGitHub/Natron#1670
-TestReadMOV_apcs # same as TestReadMOV_ap4h, NatronGitHub/Natron#1670
-TestReadMOV_svq1 # same as TestReadAVI_svq1, NatronGitHub/Natron#1670
-
 # other plug-ins
 TestCharcoal # openfx-arena Charcoal 2.x/3.0, ImageMagick 7, NatronGitHub/Natron#1630
 TestEqualize # failed with 2.5.0 on every platform too, NatronGitHub/Natron#1630
