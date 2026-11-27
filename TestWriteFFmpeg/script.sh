@@ -48,6 +48,12 @@ PNG_OPTS=("-sws_flags" "+accurate_rnd+bitexact" "-pix_fmt" "rgb48be" "-pred" "mi
 #   max 0.063).
 # - MS-MPEG4 v2/v3 (C vs NEON: 5.3% of pixels over 0.016, 2.5% over 0.032, max 0.43: a different
 #   macroblock decision changes the following P-frames).
+# - SVQ1, measured on Linux x86_64 against the arm64 references (C vs NEON gave identical
+#   streams): frame 1 (intra) is identical, frames 2-9 differ in at most 1.28% of pixels over 0.008,
+#   max 0.61. FFmpeg's x86 motion estimation uses an approximate half-pel SAD
+#   (ff_sad16_approx_xy2_sse2, ff_sad8_approx_xy2_mmxext in libavcodec/x86/me_cmp_init.c) unless
+#   AV_CODEC_FLAG_BITEXACT is set, so the encoder picks other motion vectors, and as with MS-MPEG4
+#   a different decision changes the following P-frames: no -hardfail.
 # The references must be made with the same FFmpeg major version as the tests (FFmpeg 9 in
 # Natron 2.6; MSYS2's rolling ffmpeg on Windows may move ahead): the encoders and swscale change
 # between versions. Never regenerate them with an FFmpeg that lacks the 10-bit IDCT fix of
@@ -60,12 +66,14 @@ idiff_opts() {
     case "$1" in
         avi_png|mov_png|mp4_png|mov_rle|mov_tga)
             echo "-fail 0.000001 -failpercent 0" ;;
-        mov_ap4h|mov_apch|mov_apcn|mov_apco|mov_apcs|mov_AVdn|mov_AVrp|avi_cvid|mov_cvid|mov_SVQ1|mov_mjp2|mp4_mjp2|mov_tiff)
+        mov_ap4h|mov_apch|mov_apcn|mov_apco|mov_apcs|mov_AVdn|mov_AVrp|avi_cvid|mov_cvid|mov_mjp2|mp4_mjp2|mov_tiff)
             echo "-fail 0.008 -failpercent 1 -hardfail 0.1" ;;
         avi_jpeg|mov_jpeg|mp4_jpeg|avi_mp4v|mov_mp4v|mp4_mp4v|mp4_m2v1)
             echo "-fail 0.016 -failpercent 2 -hardfail 0.25" ;;
         avi_3IVD|avi_MP42)
             echo "-fail 0.032 -failpercent 8" ;;
+        mov_SVQ1)
+            echo "-fail 0.008 -failpercent 4" ;;
         *)
             echo "Error: no tolerance for format $1 in $0" >&2
             return 1 ;;
