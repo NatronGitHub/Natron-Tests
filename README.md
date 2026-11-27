@@ -28,6 +28,7 @@ to the .ntp file and refer to them correctly in the Reader node using relative p
     - Line 2: the frame-range to test against the reference images. For example if you want to test the project against all reference images going from 1 to 10 (included), use 1 10 
     - Line 3: The script-name of the node in the project which has produced the reference frames.
     - Line 4: The file-extension of the reference images. This should be something that the Write node of Natron can output.
+      It may be followed by the bit depth to write, as an option of WriteOIIO's "bitDepth" parameter: `png 16i` writes 16-bit PNGs (the FFmpeg reader tests, `TestRead*`, use it so that the comparison doesn't go through a lossy 8-bit JPEG). Without it, the writer chooses the bit depth (8 bits for jpg and png).
     - Line 5: (optional) The quality level (0-100) of the image to write for compression methods that allow a variable amount of compression. The default value used will be 10.
 
 A correct configuration file could be as such:

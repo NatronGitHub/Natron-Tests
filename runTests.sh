@@ -481,11 +481,12 @@ for t in $TEST_DIRS; do
     
     CWD="$PWD"
     QUALITY=""
+    BIT_DEPTH=""
     for i in 1; do
         read -r NATRONPROJ
         read -r FIRST_FRAME LAST_FRAME
         read -r OUTPUTNODE
-        read -r IMAGES_FILE_EXT
+        read -r IMAGES_FILE_EXT BIT_DEPTH
         read -r QUALITY || [ -n "$QUALITY" ] # sometimes the last line contains no new line but can still be read, see https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
     done < "$CONFFILE"
     NATRONPROJ="$CWD/$NATRONPROJ"
@@ -526,6 +527,12 @@ for t in $TEST_DIRS; do
     #Set compression to none
     if [ "$IMAGES_FILE_EXT" = "jpg" ]; then
         echo "writer.quality.set($QUALITY)"
+    fi
+    # optional bit depth after the extension, e.g. "png 16i" (the WriteOIIO bitDepth option)
+    if [ -n "$BIT_DEPTH" ]; then
+        echo "writer.bitDepth.set(\"$BIT_DEPTH\")"
+        echo "if writer.bitDepth.getOption(writer.bitDepth.getValue()) != \"$BIT_DEPTH\":"
+        echo "    raise ValueError(\"Could not set the writer bit depth to $BIT_DEPTH\")"
     fi
     echo "print('encoder=',writer.internalEncoderNode.getPluginID())"
     echo "print('ocioInputSpace=',writer.ocioInputSpaceIndex.getOption(writer.ocioInputSpaceIndex.getValue()))"
