@@ -2929,7 +2929,7 @@
 			<Plugin_label>DropShadow2</Plugin_label>
 			<Plugin_script_name>DropShadow2</Plugin_script_name>
 			<Plugin_id>fr.inria.DropShadow</Plugin_id>
-			<PythonModule>/opt/Natron2/Plugins/PyPlugs/DropShadow.py</PythonModule>
+			<PythonModule>DropShadow.py</PythonModule>
 			<PythonModuleVersion>1</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>
@@ -4260,7 +4260,7 @@
 			<Plugin_label>DropShadow2_2</Plugin_label>
 			<Plugin_script_name>DropShadow2_2</Plugin_script_name>
 			<Plugin_id>fr.inria.DropShadow</Plugin_id>
-			<PythonModule>/opt/Natron2/Plugins/PyPlugs/DropShadow.py</PythonModule>
+			<PythonModule>DropShadow.py</PythonModule>
 			<PythonModuleVersion>1</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>
@@ -5696,7 +5696,7 @@
 			<Plugin_label>DropShadow2_3</Plugin_label>
 			<Plugin_script_name>DropShadow2_3</Plugin_script_name>
 			<Plugin_id>fr.inria.DropShadow</Plugin_id>
-			<PythonModule>/opt/Natron2/Plugins/PyPlugs/DropShadow.py</PythonModule>
+			<PythonModule>DropShadow.py</PythonModule>
 			<PythonModuleVersion>1</PythonModuleVersion>
 			<Plugin_major_version>1</Plugin_major_version>
 			<Plugin_minor_version>0</Plugin_minor_version>
