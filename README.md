@@ -28,6 +28,7 @@ to the .ntp file and refer to them correctly in the Reader node using relative p
     - Line 2: the frame-range to test against the reference images. For example if you want to test the project against all reference images going from 1 to 10 (included), use 1 10 
     - Line 3: The script-name of the node in the project which has produced the reference frames.
     - Line 4: The file-extension of the reference images. This should be something that the Write node of Natron can output.
+      It may be followed by the bit depth to write, as an option of WriteOIIO's "bitDepth" parameter: `png 16i` writes 16-bit PNGs (the FFmpeg reader tests, `TestRead*`, use it so that the comparison doesn't go through a lossy 8-bit JPEG). Without it, the writer chooses the bit depth (8 bits for jpg and png).
     - Line 5: (optional) The quality level (0-100) of the image to write for compression methods that allow a variable amount of compression. The default value used will be 10.
 
 A correct configuration file could be as such:
@@ -48,6 +49,15 @@ You can submit new tests with a [pull-request](https://github.com/MrKepzie/Natro
 
 Finally in runTests.sh add the directory name of your test to the TEST_DIRS variable.
 
+
+FFmpeg reader tests
+-------------------
+
+The `TestRead*` tests read one frame of a movie with ReadFFmpeg and write it as a 16-bit PNG (`png 16i` in `conf`), compared with a per-codec tolerance (the `case` before the comparison in `runTests.sh`, NatronGitHub/Natron#1600): exact up to 1e-4 for the codecs that decode identically on every CPU, and up to 1% of the pixels, none over 0.08, for the IDCT codecs.
+
+- **References:** the Linux x86_64 outputs of the Natron Linux packages run 46003895608 (Natron RB-2.6, openfx-io 20907ce, after openfx-io#323's swscale changes, FFmpeg 9.0.2). Before this change, the 8-bit JPEG outputs of the 18 tests that failed then were byte-identical on Linux, macOS and Windows x86_64, and on Linux and macOS arm64.
+- **x86_64 against aarch64** (Linux, same run): PNG, QuickTime RLE, H.264 and SVQ1 are identical; ProRes differs by at most 1/65535. The IDCT codecs (MJPEG, FLV1/H.263, MPEG-1, MPEG-2, MPEG-4 part 2), whose IDCT isn't bit-exact across CPUs, differ in at most 0.31% of the pixels over 1e-4 (3.3 times under the 1% limit) and 0.07% over 0.008, with a max of 0.023 (MPEG-1). On arm64, idiff prints a WARNING for all 14 of them; on x86_64 they match the references.
+- **Regenerating:** with an FFmpeg of the same major version, run the tests on Linux x86_64, then `for t in TestRead*; do cp $t/output1.png $t/reference1.png; done`, and check the aarch64 outputs against the new references.
 
 Comparison
 -----------

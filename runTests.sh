@@ -467,8 +467,8 @@ for t in $TEST_DIRS; do
 
     echo "$(date -u '+%Y-%m-%d %H:%M:%S') *** ===================$t========================"
     ############################################
-    rm output[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
-    rm comp[0-9]*".$IMAGES_FILE_EXT" &> /dev/null || true
+    # every extension: the conf, which gives this test's extension, isn't read yet
+    rm -f output[0-9]*.* comp[0-9]*.* &> /dev/null || true
     for CONFFILE in conf conf2 conf3 conf4 conf5; do
         failconf=0
     if [[ ! -f "$CONFFILE" ]]; then
@@ -481,11 +481,12 @@ for t in $TEST_DIRS; do
     
     CWD="$PWD"
     QUALITY=""
+    BIT_DEPTH=""
     for i in 1; do
         read -r NATRONPROJ
         read -r FIRST_FRAME LAST_FRAME
         read -r OUTPUTNODE
-        read -r IMAGES_FILE_EXT
+        read -r IMAGES_FILE_EXT BIT_DEPTH
         read -r QUALITY || [ -n "$QUALITY" ] # sometimes the last line contains no new line but can still be read, see https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
     done < "$CONFFILE"
     NATRONPROJ="$CWD/$NATRONPROJ"
@@ -526,6 +527,14 @@ for t in $TEST_DIRS; do
     #Set compression to none
     if [ "$IMAGES_FILE_EXT" = "jpg" ]; then
         echo "writer.quality.set($QUALITY)"
+    fi
+    # optional bit depth after the extension, e.g. "png 16i" (the WriteOIIO bitDepth option); set
+    # after the filename, which already chose the output colorspace (sRGB for png): WriteOIIO
+    # would choose Rec.709 from a 16-bit integer depth, but only when the filename changes
+    if [ -n "$BIT_DEPTH" ]; then
+        echo "writer.bitDepth.set(\"$BIT_DEPTH\")"
+        echo "if writer.bitDepth.getOption(writer.bitDepth.getValue()) != \"$BIT_DEPTH\":"
+        echo "    raise ValueError(\"Could not set the writer bit depth to $BIT_DEPTH\")"
     fi
     echo "print('encoder=',writer.internalEncoderNode.getPluginID())"
     echo "print('ocioInputSpace=',writer.ocioInputSpaceIndex.getOption(writer.ocioInputSpaceIndex.getValue()))"
@@ -570,7 +579,22 @@ for t in $TEST_DIRS; do
         # rather than failing the whole run. Every other test keeps the strict
         # global IDIFF_OPTS.
         TEST_IDIFF_OPTS=("${IDIFF_OPTS[@]}")
+        # FFmpeg reader tests (TestRead*, 16-bit PNG; numbers in "FFmpeg reader tests" in README.md):
+        # - codecs that decode to the same pixels on x86_64 and arm64 (PNG, QuickTime RLE, H.264,
+        #   SVQ1, ProRes: at most 1/65535): exact up to 1e-4, so that a 1-code bias, ProRes's 16-bit
+        #   white or a ProRes decode at 8 bits fails;
+        # - IDCT codecs (MJPEG, FLV1, MPEG-1/2/4 part 2), whose IDCT isn't bit-exact across CPUs (at
+        #   most 0.31% of the pixels over 1e-4, MPEG-1): 1% of the pixels may differ, none by 0.08.
         case "$t" in
+            TestReadAVI_png|TestReadMOV_png|TestReadMP4_png|TestReadMOV_rle|TestReadMOV_avc1|TestReadMP4_avc1|TestReadAVI_svq1|TestReadMOV_svq1|TestReadMOV_ap4h|TestReadMOV_apch|TestReadMOV_apcn|TestReadMOV_apco|TestReadMOV_apcs)
+                TEST_IDIFF_OPTS=("-warn" "0.0001" "-fail" "0.0001" "-failpercent" "0" "-abs" "-scale" "30")
+                ;;
+            TestReadAVI_flv1|TestReadMOV_flv1|TestReadAVI_jpg|TestReadMOV_jpg|TestReadMP4_jpg|TestReadAVI_mp4v|TestReadMOV_mp4v|TestReadMP4_mp4v|TestReadMOV_m1v|TestReadMP4_m1v|TestReadMPEG1|TestReadMOV_m2v1|TestReadMP4_m2v1|TestReadMXF)
+                TEST_IDIFF_OPTS=("-warn" "0.008" "-fail" "0.0001" "-failpercent" "1" "-hardfail" "0.08" "-abs" "-scale" "30")
+                ;;
+            TestRead*)
+                echo "Error: no tolerance for $t in $0"; failconf=1
+                ;;
             TestArc|TestText|TestTile)
                 TEST_IDIFF_OPTS=("-warn" "0.02" "-fail" "0.02" "-failpercent" "20" "-hardfail" "1.01" "-abs" "-scale" "30")
                 ;;
